@@ -23,7 +23,7 @@
             mode: 440
 
       - name: Set yum cache dir to /vagrant/yum/... dir (that is mounted on the host)
-        lineinfile: dest=/etc/yum.conf regexp=^cachedir= line=cachedir=/vagrantyum/$basearch/$releasever
+        lineinfile: dest=/etc/yum.conf regexp=^cachedir= line=cachedir=/vagrant/yum/$basearch/$releasever
 
       - name: Set keepcache=1
         lineinfile: dest=/etc/yum.conf regexp=^keepcache= line=keepcache=1
