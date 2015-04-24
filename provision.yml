@@ -1,0 +1,29 @@
+---
+
+- name: Configuration for Stepup-VM
+  hosts: all
+  sudo: True
+  gather_facts: False
+
+  vars:
+      # Password is "stepup"
+      sudo_user_password_hash: $6$kGoKMW1DrdBkyc$22a913Gspdwwd25ooGJEQRGG/ql4rVJN72nZZrmrhSJUh0M.eMjuc8BtkRiW70cPIne4Pec3FLbmiKidRcail0
+      sudo_user_name: stepup
+
+  tasks:
+      - name: Create stepup user with password
+        user: name={{ sudo_user_name }} password={{ sudo_user_password_hash }}
+
+      - name: Grant sudo rights to stepup user
+        copy:
+            content: "%{{ sudo_user_name }} ALL=(ALL) NOPASSWD: ALL"
+            dest: /etc/sudoers.d/stepup
+            owner: root
+            group: root
+            mode: 440
+
+      - name: Set yum cache dir to /vagrant/yum/... dir (that is mounted on the host)
+        lineinfile: dest=/etc/yum.conf regexp=^cachedir= line=cachedir=/vagrantyum/$basearch/$releasever
+
+      - name: Set keepcache=1
+        lineinfile: dest=/etc/yum.conf regexp=^keepcache= line=keepcache=1
