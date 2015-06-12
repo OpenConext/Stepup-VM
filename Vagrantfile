@@ -27,13 +27,13 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define "db2" do |db2|
-    db2.vm.hostname = "demo-db2"
-    db2.vm.network "private_network", ip: "192.168.66.7", :netmask => "255.255.255.0"
-    db2.vm.provider "vmware_fusion" do |v|
+  config.vm.define "ks" do |ks|
+    ks.vm.hostname = "demo-ks"
+    ks.vm.network "private_network", ip: "192.168.66.7", :netmask => "255.255.255.0"
+    ks.vm.provider "vmware_fusion" do |v|
       v.vmx["memsize"] = "1536"
     end
-    db2.vm.provider "virtualbox" do |v|
+    ks.vm.provider "virtualbox" do |v|
       v.memory = 1536
     end
   end
