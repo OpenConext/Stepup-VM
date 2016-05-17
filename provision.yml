@@ -27,3 +27,16 @@
 
       - name: Set keepcache=1
         lineinfile: dest=/etc/yum.conf regexp=^keepcache= line=keepcache=1
+
+      - name: Correct Subsystem option
+        lineinfile: dest=/etc/ssh/sshd_config
+                    regexp="^Subsystem"
+                    line="Subsystem       sftp    internal-sftp"
+        notify:
+        - restart sshd
+
+  handlers:
+      - name: restart sshd
+        service:
+          name: sshd
+          state: restarted
