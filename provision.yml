@@ -15,3 +15,30 @@
 
       - name: Exclude kernel packages in yum
         lineinfile: dest=/etc/yum.conf regexp=^exclude=kernel line=exclude=kernel*
+
+      - name: Create ens32 config in /etc/sysconfig/network-scripts/ifcfg-ens32
+        copy:
+            dest: /etc/sysconfig/network-scripts/ifcfg-ens32
+            content: |
+                DEVICE="ens32"
+                BOOTPROTO=dhcp
+                NM_CONTROLLED="no"
+                PERSISTENT_DHCLIENT=1
+                ONBOOT="yes"
+                TYPE=Ethernet
+                DEFROUTE=yes
+                PEERDNS=yes
+                PEERROUTES=yes
+                IPV4_FAILURE_FATAL=yes
+                IPV6INIT=yes
+                IPV6_AUTOCONF=yes
+                IPV6_DEFROUTE=yes
+                IPV6_PEERDNS=yes
+                IPV6_PEERROUTES=yes
+                IPV6_FAILURE_FATAL=no
+                NAME="ens32"
+        notify: Restart networking
+
+  handlers:
+      - name: Restart networking
+        action: service name=network state=restarted
