@@ -2,7 +2,7 @@
 
 - name: Configuration for Stepup-VM
   hosts: all
-  sudo: True
+  become: True
   gather_facts: False
   serial: 1
 
