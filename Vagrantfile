@@ -20,6 +20,14 @@ Vagrant.configure("2") do |config|
       v.vmx["numvcpus"] = "1"
       # puppetlabs centos box uses ens33 nic
       v.vmx["ethernet0.pciSlotNumber"] = "33"
+      # Add second nic for vmnet2 (configure this manually in vmware as host based, 192.168.66.0/24)
+      v.vmx["ethernet1.present"] = "TRUE"
+      v.vmx["ethernet1.connectionType"] = "custom"
+      v.vmx["ethernet1.virtualDev"] = "e1000"
+      v.vmx["ethernet1.wakeOnPcktRcv"] = "FALSE"
+      v.vmx["ethernet1.addressType"] = "generated"
+      v.vmx["ethernet1.vnet"] = "vmnet2"
+      v.vmx["ethernet1.pciSlotNumber"] = "32"
   #v.gui = true
     end
     app.vm.provider "virtualbox" do |v|
@@ -35,6 +43,14 @@ Vagrant.configure("2") do |config|
       v.vmx["numvcpus"] = "1"
       # puppetlabs centos box uses ens33 nic
       v.vmx["ethernet0.pciSlotNumber"] = "33"
+      # Add second nic for vmnet2 (configure this manually in vmware as host based, 192.168.66.0/24)
+      v.vmx["ethernet1.present"] = "TRUE"
+      v.vmx["ethernet1.connectionType"] = "custom"
+      v.vmx["ethernet1.virtualDev"] = "e1000"
+      v.vmx["ethernet1.wakeOnPcktRcv"] = "FALSE"
+      v.vmx["ethernet1.addressType"] = "generated"
+      v.vmx["ethernet1.vnet"] = "vmnet2"
+      v.vmx["ethernet1.pciSlotNumber"] = "32"
       #v.gui = true
     end
     manage.vm.provider "virtualbox" do |v|
@@ -58,13 +74,13 @@ Vagrant.configure("2") do |config|
       "stepup-ra:children" => ["stepup-app"],
       "stepup-middleware:children" => ["stepup-app"],
       "stepup-tiqr:children" => ["stepup-app"],
-      "stepup-keyserver" => ["stepup-app"],
+      "stepup-keyserver:children" => ["stepup-app"],
       "lb" => [], # Don't use a sparate lb, use the proxy role insstead. It set's up a simple reverse proxy using nginx op the app server
       "ks" => [],
       "ks:children" => ["app"]
     }
     ansible.host_vars = {
-          "app.stepup.example.com" => {"host_ipv4" => "192.168.66.3", "backend_ipv4" => "127.0.0.1"},
+          "app.stepup.example.com" => {"host_ipv4" => "192.168.66.3", "backend_ipv4" => "192.168.66.3"},
           "manage.stepup.example.com" => {"host_ipv4" => "192.168.66.4"}
           #"db.stepup.example.com" => {"host_ipv4" => "192.168.66.5", "backend_ipv4" => "192.168.66.5" }
         }
