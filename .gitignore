@@ -3,3 +3,5 @@
 /yum
 /environment
 !/environment/inventory
+/src
+/deploy
