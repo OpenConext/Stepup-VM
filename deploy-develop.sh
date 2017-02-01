@@ -10,6 +10,6 @@ COMPONENTS=(
 )
 
 for comp in "${COMPONENTS}"; do
-    echo $comp
-#    ./deploy/scripts/deploy.sh ./tarballs/${comp} -i ./environment/inventory -l 'app*'
+    comp_lower=`echo "${comp}" | tr '[:upper:]' '[:lower:]'`
+    ansible-playbook deploy/deploy.yml -l app* -i environment/inventory -t ${comp_lower} -e tarball_location="dummy" -e component_dir_name="/src/${comp}" -e develop=true
 done

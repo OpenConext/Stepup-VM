@@ -1,7 +1,9 @@
 /.vagrant
 /.idea
 /yum
-/environment
-!/environment/inventory
 /src
 /deploy
+/composer_cache
+/environment
+!/environment/inventory
+

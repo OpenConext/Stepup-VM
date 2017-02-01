@@ -11,21 +11,23 @@ Vagrant.configure("2") do |config|
   # Tip: After spinning up de VM(s) with vagrant you can use bash 4 commandline completion for completing hostname in Vagrant
   #      With ansible-playbook you can use e.g. "-l app*" to safe typing
   config.vm.define "app.stepup.example.com" do |app|
-    #app.vm.synced_folder ".", "/vagrant", disabled: true
-    app.vm.synced_folder "./src/", "/src"
+
+    app.vm.synced_folder "./src/", "/src", :mount_options => ["dmode=777","fmode=666"]
 
     # Let vagrant create a 192.168.66.0/24 network and add a second nic to the VM for it
     # The VM will have two NICs:
     # - The default NIC with a DHCP address, this is the NIC that will be used when "vagrant ssh app.stepup.example.com"
     # -
-    app.vm.network "private_network", ip: "192.168.66.3", :netmask => "255.255.255.0"
+    app.vm.network :private_network, ip: "192.168.66.3"
     app.vm.provider "vmware_fusion" do |v|
       v.vmx["memsize"] = "1536"
       v.vmx["numvcpus"] = "1"
       #v.gui = true
     end
     app.vm.provider "virtualbox" do |v|
-      v.memory = 1536
+      # Use the default (vboxsf)
+      v.customize ["modifyvm", :id, "--memory", "2048"]
+      v.customize ["modifyvm", :id, "--cpus", "2"]
     end
   end
 
@@ -33,14 +35,15 @@ Vagrant.configure("2") do |config|
     #app.vm.synced_folder ".", "/vagrant", disabled: true
 
     # Let vagrant create a 192.168.66.0/24 network and add a second nic to the VM for it
-    manage.vm.network "private_network", ip: "192.168.66.4", :netmask => "255.255.255.0"
+    manage.vm.network :private_network, ip: "192.168.66.4"
     manage.vm.provider "vmware_fusion" do |v|
       v.vmx["memsize"] = "1536"
       v.vmx["numvcpus"] = "1"
       #v.gui = true
     end
     manage.vm.provider "virtualbox" do |v|
-      v.memory = 1536
+      v.customize ["modifyvm", :id, "--memory", "2048"]
+      v.customize ["modifyvm", :id, "--cpus", "2"]
     end
   end
 
