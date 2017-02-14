@@ -6,4 +6,5 @@
 /composer_cache
 /environment
 !/environment/inventory
-
+!/environment/yubico_client_id*
+!/environment/yubico_secret_key*
