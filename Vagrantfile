@@ -116,7 +116,9 @@ Vagrant.configure("2") do |config|
       # It set's up a simple reverse proxy using nginx op the app server
       "lb" => [],
       "ks" => [],
-      "ks:children" => ["app"]
+      "ks:children" => ["app"],
+      "dev" => [],
+      "dev:children" => ["app"]
     }
 
     ansible.host_vars = {
