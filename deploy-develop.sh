@@ -12,7 +12,7 @@ COMPONENTS=(
 "Stepup-SelfService"
 "Stepup-RA"
 "Stepup-tiqr"
-#"oath-service-php"
+"oath-service-php"
 )
 
 for comp in "${COMPONENTS[@]}"; do

@@ -16,6 +16,9 @@
       - name: Exclude kernel packages in yum
         lineinfile: dest=/etc/yum.conf regexp=^exclude=kernel line=exclude=kernel*
 
+      - name: Yum update
+        yum: update_cache=yes name='*' state=latest
+
       # Manage networking the old fashioned way
       - name: Stop & Disable NetworkManager service
         service: name=NetworkManager state=stopped enabled=false
