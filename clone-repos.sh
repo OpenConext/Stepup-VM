@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# This script:
+# - Clones the Stepup repo's of the gateway, middleware, RA, selfservice and keyserver components for a development
+#   deploy from github into /src
+# - Clones the Stepup-Deploy repo into /deploy
+#
+# Run this script from the Stepup-VM directory
+#
+# Will not overwrite existing directories
+
 # Check required tools
 REQUIRED_TOOLS=(
     "git"
@@ -18,7 +27,10 @@ set -e
 # Note: If you want the sources to reside somewhere else, you can make "src" a symlink.
 #       E.g.: ln -s ~/mysources src
 if [ ! -e "./src" ]; then
-    mkdir src
+    echo "Creating src directory"
+    mkdir "src"
+else
+    echo "Directory ./src exists. Not creating that directory."
 fi
 
 # List of repositories (Format: <Github origanization>:<name>)
@@ -36,7 +48,10 @@ for repo in "${SOURCE_REPOS[@]}"; do
     org=${repo%%:*}
     name=${repo#*:}
     if [ ! -e "./src/${name}" ]; then
+        echo "git clone https://github.com/${org}/${name}.git ./src/${name}"
         git clone https://github.com/${org}/${name}.git ./src/${name}
+    else
+        echo "Directory ./src/${name} exists. Skipping git clone into that directory."
     fi
 done
 
@@ -45,5 +60,10 @@ done
 # Note: If you want the deploy repository to reside somewhere else, you can make "deploy" a symlink.
 #       E.g.: ln -s ~/mydeployrepo deploy
 if [ ! -e "./deploy" ]; then
+    echo "git clone https://github.com/OpenConext/Stepup-Deploy.git ./deploy"
     git clone https://github.com/OpenConext/Stepup-Deploy.git ./deploy
+else
+    echo "Directory ./deploy exists. Skipping git clone into that directory."
 fi
+
+echo "OK."
