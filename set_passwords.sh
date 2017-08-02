@@ -34,6 +34,8 @@ for password in "${PASSWORDS[@]}"; do
     password_file=${password%%:*}
     password_value=${password#*:}
 
+    echo "Setting password: ${password_file}"
+
     tempfile=`mktemp -t set_kb_pwd.XXXXX`
     echo -n ${password_value} > "$tempfile"
     crypt=`./deploy/scripts/encrypt-file.sh ./environment/stepup-ansible-keystore/ -f "$tempfile"`
