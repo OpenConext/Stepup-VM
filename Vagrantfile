@@ -12,23 +12,25 @@ Vagrant.configure("2") do |config|
   #      With ansible-playbook you can use e.g. "-l app*" to safe typing
   config.vm.define "app.stepup.example.com", primary: true do |app|
 
-    # Setup an additional shared folder for mounting the sources from the host
-    #
-    # Note that you must to use the vagrant commands vor starting / resuming the VM to get the mount
-    # reinstated. A reboot from the VM will not suffice. Use:
-    # "vagrant up" to start the VM
-    # "vagrant reload" to reboot the VM
-    # "vagrant halt" to stop the VM
-
-    app.vm.synced_folder "./src/", "/src"#, :mount_options => ["dmode=777","fmode=666"]
-
     # Let vagrant create a 192.168.66.0/24 network and add a second nic to the VM for it
     # The VM will have two NICs:
     # - The default NIC with a DHCP address, this is the NIC that will be used when "vagrant ssh app.stepup.example.com"
     # -
     app.vm.network :private_network, ip: "192.168.66.3"
 
+    # VMWare fusion specific configuration
     app.vm.provider "vmware_fusion" do |v|
+ 
+      # Setup an additional shared folder for mounting the sources from the host
+      #
+      # Note that you must to use the vagrant commands vor starting / resuming the VM to get the mount
+      # reinstated. A reboot from the VM will not suffice. Use:
+      # "vagrant up" to start the VM
+      # "vagrant reload" to reboot the VM
+      # "vagrant halt" to stop the VM
+
+      app.vm.synced_folder "./src/", "/src"#, :mount_options => ["dmode=777","fmode=666"]
+
       v.vmx["memsize"] = "2048"
       v.vmx["numvcpus"] = "2"
       #v.gui = true
@@ -53,10 +55,22 @@ Vagrant.configure("2") do |config|
       # /etc/sysconfig/network-scripts/ifcfg-ens32
     end
 
+    # VirtualBox specific configuration
     app.vm.provider "virtualbox" do |v|
       # Use the default (vboxsf)
       v.customize ["modifyvm", :id, "--memory", "2048"]
       v.customize ["modifyvm", :id, "--cpus", "2"]
+
+      # Setup an additional shared folder for mounting the sources from the host
+      #
+      # Note that you must to use the vagrant commands vor starting / resuming the VM to get the mount
+      # reinstated. A reboot from the VM will not suffice. Use:
+      # "vagrant up" to start the VM
+      # "vagrant reload" to reboot the VM
+      # "vagrant halt" to stop the VM
+
+      app.vm.synced_folder "./src/", "/src", 
+	:type => :nfs #, :mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
     end
   end
 
