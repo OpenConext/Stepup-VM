@@ -12,6 +12,19 @@ Vagrant.configure("2") do |config|
   #      With ansible-playbook you can use e.g. "-l app*" to safe typing
   config.vm.define "app.stepup.example.com", primary: true do |app|
 
+    src_path = nil
+
+    if ARGV[0] == "up" then
+        if ENV["ENV"] != "dev" then
+          puts("INFO: To create a VM that can mount sources from the host for development purposes")
+          puts("INFO: set 'ENV=dev'. E.g run vagrant with:")
+          puts("INFO: $ export ENV=dev; vagrant " + ARGV.join(" "))
+        else
+          src_path = File.dirname(__FILE__) + "/src/"
+          puts("INFO: 'ENV=dev' so " + src_path + " will be mounted in the app VM as /src")
+        end
+      end
+
     # Let vagrant create a 192.168.66.0/24 network and add a second nic to the VM for it
     # The VM will have two NICs:
     # - The default NIC with a DHCP address, this is the NIC that will be used when "vagrant ssh app.stepup.example.com"
@@ -29,7 +42,9 @@ Vagrant.configure("2") do |config|
       # "vagrant reload" to reboot the VM
       # "vagrant halt" to stop the VM
 
-      app.vm.synced_folder "./src/", "/src"#, :mount_options => ["dmode=777","fmode=666"]
+      if src_path != nil then
+        app.vm.synced_folder src_path, "/src"#, :mount_options => ["dmode=777","fmode=666"]
+      end
 
       v.vmx["memsize"] = "2048"
       v.vmx["numvcpus"] = "2"
@@ -69,8 +84,11 @@ Vagrant.configure("2") do |config|
       # "vagrant reload" to reboot the VM
       # "vagrant halt" to stop the VM
 
-      app.vm.synced_folder "./src/", "/src", 
-	:type => :nfs #, :mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
+      if src_path != nil then
+        app.vm.synced_folder "./src/", "/src",
+      	  :type => :nfs #, :mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
+      end
+
     end
   end
 
@@ -120,6 +138,7 @@ Vagrant.configure("2") do |config|
       "manage" => ["manage.stepup.example.com"],
       "es:children" => ["manage"],
       "proxy:children" => ["stepup-app"],
+      "dbconfig:children" => ["stepup-app"],
       "stepup-gateway:children" => ["stepup-app"],
       "stepup-selfservice:children" => ["stepup-app"],
       "stepup-ra:children" => ["stepup-app"],
