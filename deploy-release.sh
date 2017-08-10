@@ -84,7 +84,8 @@ shift
         shift
         ;;
         *)
-        error_exit "Unknown option: '${option}'"
+        echo "Unknown option: '${option}'"
+        exit 1
         ;;
     esac
 done
