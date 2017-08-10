@@ -5,6 +5,8 @@
 /deploy
 /composer_cache
 /environment
+/tarballs
+*.retry
 !/environment/inventory
 !/environment/host_vars
 !/environment/yubico_client_id*
