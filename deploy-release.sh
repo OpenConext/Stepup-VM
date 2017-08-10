@@ -97,6 +97,7 @@ if [ -z "$COMPONENTS" ]; then
     exit 1
 fi
 
+echo "Deploying component(s) of Release ${RELEASE}"
 
 if [ ! -d "./tarballs" ]; then
     echo "Creating directory './tarballs' because is does not exist"
@@ -133,3 +134,9 @@ for comp in "${COMPONENTS[@]}"; do
         exit 1
     fi
 done
+
+echo ""
+echo "==========================================================="
+echo "To run the bootstrap scripts on the application server use:"
+echo "./bootstrap-app.sh"
+echo "==========================================================="
