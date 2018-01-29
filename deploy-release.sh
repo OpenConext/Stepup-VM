@@ -3,9 +3,27 @@
 # Deploy all components of a release. Use "--help" for help
 
 # Default release to deploy
-RELEASE=11
+RELEASE=13
 
 # Add new releases here
+
+COMPONENTS_RELEASE_13=(
+"Stepup-Gateway-2.7.2-20180126151123Z-d6160b256779d94572322b2f06cffabd2ac70f2b.tar.bz2" # new
+"Stepup-Middleware-2.6.4-20171215143000Z-64908ab6d4c3f574eff84243c2cda5ec0740634a.tar.bz2" # new
+"Stepup-SelfService-2.7.0-20170801141012Z-d06bbb5ee3807dbd8e51338855e201ce41023c50.tar.bz2"
+"Stepup-RA-2.7.1-20171215144931Z-6638a96573b7568256cf8e220f316260101c9443.tar.bz2" # new
+"Stepup-tiqr-v1.1.5-20170424220742Z-d0aab72dcb5f0e37f49332039b27e6200bbe8318.tar.bz2"
+"oath-service-php-1.0.1-20150723081351Z-56c990e62b4ba64ac755ca99093c9e8fce3e8fe9.tar.bz2"
+)
+
+COMPONENTS_RELEASE_12=(
+"Stepup-Gateway-2.7.0-20171005084621Z-9445c4219f3dd9b1e901a5882943da273cd02db0.tar.bz2" # new
+"Stepup-Middleware-2.6.0-20170801073238Z-15d255e9c64bdaf8fcce2f1806e9c4ab893ee24c.tar.bz2"
+"Stepup-SelfService-2.7.0-20170801141012Z-d06bbb5ee3807dbd8e51338855e201ce41023c50.tar.bz2"
+"Stepup-RA-2.7.0-20170801141958Z-1ba3e4d8b9d9df97d904842854da41c0ce498cb4.tar.bz2"
+"Stepup-tiqr-v1.1.5-20170424220742Z-d0aab72dcb5f0e37f49332039b27e6200bbe8318.tar.bz2"
+"oath-service-php-1.0.1-20150723081351Z-56c990e62b4ba64ac755ca99093c9e8fce3e8fe9.tar.bz2"
+)
 
 COMPONENTS_RELEASE_11=(
 "Stepup-Gateway-2.6.0-20170801071509Z-57618638b03838a5ed21f7b5376342a1797030d7.tar.bz2" # new
