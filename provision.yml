@@ -19,6 +19,12 @@
       - name: Yum update
         yum: update_cache=yes name='*' state=latest
 
+      - name: Set sshd_config MaxAuthTries 30
+        lineinfile: dest=/etc/ssh/sshd_config regexp=^MaxAuthTries line="MaxAuthTries 30"
+
+      - name: Restart sshd
+        service: name=sshd state=restarted
+
       # Manage networking the old fashioned way
       - name: Stop & Disable NetworkManager service
         service: name=NetworkManager state=stopped enabled=false
