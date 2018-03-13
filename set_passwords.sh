@@ -6,7 +6,7 @@
 # - yubico API
 
 if [ ! -e "environment/yubico_secret_key" -o ! -e "environment/yubico_client_id" ]; then
-    echo "Missing environment/yubico_secret_key or environment/yubico_client_id.sample"
+    echo "Missing environment/yubico_secret_key or environment/yubico_client_id"
     echo "You must create these two files. Theae must contain the client id and secret for"
     echo "Accessing the Yubico API."
     echo ""
