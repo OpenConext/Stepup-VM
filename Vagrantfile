@@ -88,7 +88,9 @@ Vagrant.configure("2") do |config|
 
       if src_path != nil then
         app.vm.synced_folder "./src/", "/src",
-      	  :type => :nfs #, :mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
+          nfs: true,
+          linux__nfs_options: ['rw','no_subtree_check','all_squash','async']
+          #:mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
       end
 
     end
