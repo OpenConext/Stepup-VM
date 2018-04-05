@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
 
     src_path = nil
 
-    if ARGV[0] == "up" then
+    if ARGV[0] == "up" or ARGV[0] == "reload" then
         if ENV["ENV"] != "dev" then
           puts("INFO: To create a VM that can mount sources from the host for development purposes")
           puts("INFO: set 'ENV=dev'. E.g run vagrant with:")
