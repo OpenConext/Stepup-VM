@@ -7,6 +7,15 @@ RELEASE=13_2
 
 # Add new releases here
 
+COMPONENTS_RELEASE_14=(
+"Stepup-Gateway-2.8.3-20180404095536Z-c71690729b38ef4a570ea4c0a2cbd8e8b6fcbca5.tar.bz2" # new
+"Stepup-Middleware-2.7.1-20180330083152Z-a3c457f93751ce97f6915326106515763b267594.tar.bz2" # new
+"Stepup-SelfService-2.8.0-20180315090529Z-1ea292cf3ff8afc7e2edd1452c409b9d6de30ee8.tar.bz2" # new
+"Stepup-RA-2.8.1-20180323142543Z-92c7a9bb3cf74524398a7d5ae7b8d69eecae7406.tar.bz2" # new
+"Stepup-tiqr-1.1.8-20180306084707Z-acd4c5db5b22ff5fad48c032e0236fa27d1ae1ce.tar.bz2"
+"oath-service-php-1.0.1-20150723081351Z-56c990e62b4ba64ac755ca99093c9e8fce3e8fe9.tar.bz2"
+)
+
 COMPONENTS_RELEASE_13_2=(
 "Stepup-Gateway-2.7.5-20180306083743Z-0e0a9363987d1bcf72f1ca115bfe2530d9530b93.tar.bz2" # new
 "Stepup-Middleware-2.6.4-20171215143000Z-64908ab6d4c3f574eff84243c2cda5ec0740634a.tar.bz2"
