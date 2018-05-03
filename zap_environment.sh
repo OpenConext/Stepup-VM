@@ -15,8 +15,9 @@ fi
 # Remove all files and directories except 'inventory'
 echo "Removing files and directories:"
 find ${environment_dir}/* -maxdepth 0 -type d -exec rm -v -r {} +
-find ${environment_dir}/. ! -name 'inventory' -type f -exec rm -v {} +
+find ${environment_dir}/. ! -name 'inventory' ! -name 'yubico_*' ! -name 'yubikey_id*' ! -name 'host_vars'  -type f -exec rm -v {} +
 echo "Done."
-echo
-echo 'You can use "./deploy/scripts/create_new_environment.sh environment/" to create a new environment.'
-echo
+
+echo "To create a new environment use:"
+echo "./init-env.sh"
+echo "./set_passwords.sh"

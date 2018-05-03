@@ -1,5 +1,17 @@
 /.vagrant
 /.idea
 /yum
+/src
+/deploy
+/composer_cache
 /environment
+/tarballs
+*.retry
 !/environment/inventory
+!/environment/host_vars
+!/environment/yubico_client_id*
+!/environment/yubico_secret_key*
+!/environment/yubikey_id*
+/environment/yubico_client_id
+/environment/yubico_secret_key
+/environment/yubikey_id

@@ -3,7 +3,7 @@
 - name: Configuration for Stepup-VM
   hosts: all
   become: True
-  gather_facts: False
+  gather_facts: True
   serial: 1
 
   tasks:
@@ -16,30 +16,46 @@
       - name: Exclude kernel packages in yum
         lineinfile: dest=/etc/yum.conf regexp=^exclude=kernel line=exclude=kernel*
 
-      - name: Create ens32 config in /etc/sysconfig/network-scripts/ifcfg-ens32
+      - name: Yum update
+        yum: update_cache=yes name='*' state=latest
+
+      - name: Set sshd_config MaxAuthTries 30
+        lineinfile: dest=/etc/ssh/sshd_config regexp=^MaxAuthTries line="MaxAuthTries 30"
+
+      - name: Restart sshd
+        service: name=sshd state=restarted
+
+      # Manage networking the old fashioned way
+      - name: Stop & Disable NetworkManager service
+        service: name=NetworkManager state=stopped enabled=false
+
+      - name: Create a config for ens32 in /etc/sysconfig/network-scripts/ifcfg-ens32
+              # ... that replaces the ifcfg-ens33 one that was overwritten by vagrant
+              # ens32 now survives vagrant reload / up / halt
         copy:
             dest: /etc/sysconfig/network-scripts/ifcfg-ens32
             content: |
-                DEVICE="ens32"
-                BOOTPROTO="static"
-                IPADDR="{{host_ipv4}}"
-                NETMASK="255.255.255.0"
-                NM_CONTROLLED="no"
-                ONBOOT="yes"
-                TYPE="Ethernet"
-                DEFROUTE="no"
-                PEERDNS="no"
-                PEERROUTES="no"
-                IPV4_FAILURE_FATAL="yes"
-                IPV6INIT="no"
-                IPV6_AUTOCONF="no"
-                IPV6_DEFROUTE="no"
-                IPV6_PEERDNS="no"
-                IPV6_PEERROUTES="no"
-                IPV6_FAILURE_FATAL="no"
                 NAME="ens32"
-        notify: Restart networking
+                DEVICE="ens32"
+                ONBOOT=yes
+                NETBOOT=yes
+                IPV6INIT=yes
+                BOOTPROTO=dhcp
+                TYPE=Ethernet
+                DEFROUTE=yes
+                IPV4_FAILURE_FATAL=no
+                IPV6_AUTOCONF=yes
+                IPV6_DEFROUTE=yes
+                IPV6_FAILURE_FATAL=no
+                PEERDNS=yes
+                PEERROUTES=yes
+                IPV6_PEERDNS=yes
+                IPV6_PEERROUTES=yes
+                NM_MANAGED=no
+        when: ansible_virtualization_type == "VMware"
 
-  handlers:
+      # Always restart the network
+      # If something is wrong with the networking config of the VM, this is likely to show up here
       - name: Restart networking
-        action: service name=network state=restarted
+        service: name=network state=restarted
+
