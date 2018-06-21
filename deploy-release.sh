@@ -1,11 +1,21 @@
 #!/bin/sh
 
-# Deploy all components of a release. Use "--help" for help
+# Deploy all components of a release form tarballs published on github.
+# Use "--help" for help and more options
 
 # Default release to deploy
-RELEASE=13_2
+RELEASE=15
 
 # Add new releases here
+
+COMPONENTS_RELEASE_15=(
+"Stepup-Gateway-2.9.1-20180620090223Z-19f8d51441f773bb9b21424f336f4b92b5509f46.tar.bz2" # new
+"Stepup-Middleware-2.8.1-20180502112539Z-2cdc9d15a5d2962e3516c6552aace552e43b8329.tar.bz2" # new
+"Stepup-SelfService-2.9.1-20180620090547Z-bac7b381514c98c334f00ce6d87c5db66f7a245c.tar.bz2" # new
+"Stepup-RA-2.9.0-20180419113138Z-dc14e3b78b5aaf884db632e2f7d943a071e38a3f.tar.bz2" # new
+"Stepup-tiqr-2.0.1-20180620092259Z-d2aaf27437cdf815b7fdd6ff822425b000f14934.tar.bz2" #new
+"oath-service-php-1.0.1-20150723081351Z-56c990e62b4ba64ac755ca99093c9e8fce3e8fe9.tar.bz2"
+)
 
 COMPONENTS_RELEASE_14=(
 "Stepup-Gateway-2.8.3-20180404095536Z-c71690729b38ef4a570ea4c0a2cbd8e8b6fcbca5.tar.bz2" # new
