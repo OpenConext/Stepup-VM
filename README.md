@@ -1,69 +1,118 @@
 # Stepup-VM
-Stepup-VM - Vagrant VMs that can be used with Stepup-Deploy
+Stepup-VM - Vagrant VMs for use with [Stepup-Deploy](https://github.com/OpenConext/Stepup-Deploy)
 
-Use the Vagrant file and scripts in this repository to create a complete Stepup system for testing purposes. After following the instructions in this repository you will have two virtual machines:
+You can use the Vagrant file and scripts in this repository to create a complete Stepup system for testing or development purposes. After following the instructions in this repository you will have one or two virtual machines.
 
 1. app.stepup.example.com with a fixed IP of 192.168.66.3. This machine hosts all the stepup applications and the database.
-2. manage.stepup.example.com with a fixed IP of 192.168.66.4. This machine hosts the ELK stack.
+2. manage.stepup.example.com (optional) with a fixed IP of 192.168.66.4. This machine hosts the ELK stack.
 
-Please
+The app VM includes an IdP and an SP that you can immediately use for testing Stepup.
+
+Two different setups are supported:
+
+1. Everything is installed in the VM, the Stepup components are installed from tarballs. This closely matches a production setup
+2. A developemnt setup. The source repositories of the Stepup components are located on the host and are mounted in the VM. Installation from source (git clone), not tarball. This setup is suitable for development as it allows modification and debugging of the code from an IDE on the host.
 
 # Requirements
 
-Create a local Stepup Development environment running in a VM (VirtualBox / VMWare)
+These are the requirements for a minimal installation and results in a Stepup system where Yubikey and U2F tokens can be used. Using other token types has additional requirements.
 
 Requirements:
 - a YubiKey
 - VirtualBox / VMware Fusion or Workstation
 - Vagrant
-- Ansible 2.x
+- Ansible 2.x (< 2.4)
 - bash, openssl, git
 - keyczart and keytool
 
-See the [Stepup-Deploy README](https://github.com/OpenConext/Stepup-Deploy/blob/develop/README.md) for more detailed information on (installing) the requirements.
+See the [Stepup-Deploy README](https://github.com/OpenConext/Stepup-Deploy/blob/develop/README.md) for more detailed information on (installing) the requirements above.
 
-# Quickstart
+# Quickstart Stepup-VM
 
-This manual assumes that you are installing stepup from GitHub sources directly and are not using the prebuild packages.
+This installs a Stepup-VM for testing purposes. Installation of the stepup components is from the prebuild tarballs that are hosted on github.
 
-1. Clone this repository and from the root of this repository (i.e. the Stepup-VM directory).
+Ensure that you have all the tools installed:
+- Vagrant with the VirtualBox or the VMWare provider
+- git, openssl, bash
+- Ansible 2.x (< 2.4). Can be installed using pip:
+  `pip install "ansible<2.4"`
+- keyczart and keytool. These can be installed using pip:
+  `pip install python-keyczar`
 
-2. Add the following to your /etc/hosts file:
+A fast (wired) connection is recommended while setting up the VM. The VM has been configured to cache downloaded rpms and composer packages in the Stepup-VM/vagrant directory, so releated installatinos are faster.
+
+## Setup repositories
+
+We will assume that you are working in a directory `~/workspace`.
+
+* Clone the Stepup-VM (this) repository into `~/workspace`
 ```
-192.168.66.3 app.stepup.example.com gateway.stepup.example.com selfservice.stepup.example.com ra.stepup.example.com tiqr.stepup.example.com tiqr.stepup.example.com middleware.stepup.example.com ks.stepup.example.com keyserver.stepup.example.com db.stepup.example.com
-192.168.66.4 manage.stepup.example.com
+cd ~/workspace/
+git clone https://github.com/OpenConext/Stepup-VM
 ```
 
-3. Run:
-
+* Checkout the Stepup-Deploy repository that matches the Stepup components that you want to deploy. E.g. "master" (latest release), "branch-release-15" (a specific release) or "develop" (current development version)
 ```
-$ vagrant up
-$ clone-repos.sh
-$ init-env.sh
+git clone -b master https://github.com/OpenConext/Stepup-Deploy 
 ```
 
-4. Get an API key for using the Yubico authentication service at https://upgrade.yubico.com/getapikey/
-This requires a YubiKey. This gives you a client ID and a secret key for accessing the Yubico authentication service
+* Create a symlink named "deploy" in Stepup-VM that points to Stepup-Deploy. This link is used by the various scripts in Stepup-VM that use Stepup-Deploy.
+```
+ln -s ~/workspace/Stepup-Deploy ~/workspace/Stepup-VM/deploy
+```
+
+## Create app.stepup.example.com VM
+
+Vagrant is used to create the app.stepup.example.com VM. Vagrant uses Ansible to provision to configure the networking in the VM and to do a yum update. This takes a while. If you have the resources, you could increase the memory from 2 to 3 or 4 GB by editing the ~/workspace/Stepup-VMVagrant file.
+
+```
+cd ~/workspace/Stepup-VM
+vagrant up app.stepup.example.com
+```
+
+This takes a while. In the mean time:
+
+Initialise the Ansible environment
+```
+cd ~/workspace/Stepup-VM
+./init-env.sh
+```
+
+Get an API key for using the Yubico authentication service at https://upgrade.yubico.com/getapikey/
+This requires a YubiKey. This gives you a client ID and a secret key for accessing the Yubico authentication service. You need to authenticate with an YubiKey to get them.
 
     - Copy the client ID to environment/yubico_client_id. E.g. `echo '12345' > ./environment/yubico_client_id`.
     - Copy the secret key to environment/yubico_secret_key. E.g. `echo 'AAAAAAAAAAAAAAAAAAAAAAAAAAA=' > ./environment/yubico_secret_key`. 
 
-5. Put the ID of your YubiKey in environment/yubikey_id. E.g. `echo '12345678' > ./environment/yubikey_id`. This ID is printed on your YubiKey.
 
-6. Run:
+Put the ID of your YubiKey in environment/yubikey_id. E.g. `echo '12345678' > ./environment/yubikey_id`. This ID is printed on your YubiKey ans is 8 digits.
+
+Set some passwords to known values:
 ```
-$ set_passwords.sh
-$ deploy-site-app.sh
-$ deploy-site-manage.sh
-$ deploy-develop.sh 
-$ bootstrap-app.sh
+./set_passwords.sh
+```
+
+When Vagrant is done provisionning the VM, continue with the setup of the app VM.
+Deploy the stepup components in the app VM:
+```
+./deploy-release
+```
+
+Bootstrap the database
+```
+bootstrap-app.sh
 ```
 
 Now you can login to (username/password: admin/admin):
 https://selfservice.stepup.example.com
-https://ra.stepup.example.com (requires authentication with the yubikey ID you set in step 5)
+https://ra.stepup.example.com (requires authentication with the yubikey ID you set previously
 
-Mailcatcher: http://app.stepup.example.com:1080
+Note that the admin account is an SRAA (i.e. super user, root for stepup). This account can be
+used to vet and administer additional users.
+
+Read mail in mailcatcher at: http://app.stepup.example.com:1080
+
+There is a test SP installed at https://ssp.stepup.example.com/sp.php that can authenticate to the Stepup-Gateway
 
 
 # Test Accounts
@@ -288,3 +337,7 @@ The database is a MariaDB Galera cluster that consists of one node and that runs
 $ vagrant ssh app.stepup.example.com
 $ sudo service mysql bootstrap
 ```
+
+
+
+For a developmet VM we will be installing Stepup components from GitHub clones on the host that are mounted in the VM.
