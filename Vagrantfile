@@ -156,6 +156,7 @@ Vagrant.configure("2") do |config|
       "ks" => [],
       "ks:children" => ["app"],
       "dev" => [],
+      # Add development tools
       "dev:children" => ["app"]
     }
 
