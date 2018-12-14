@@ -66,8 +66,8 @@ ln -s ~/workspace/Stepup-Deploy ~/workspace/Stepup-VM/deploy
 Vagrant is used to create the app.stepup.example.com VM. Vagrant uses Ansible to provision to configure the networking in the VM and to do a yum update. This takes a while. If you have the resources, you could increase the memory from 2 to 3 or 4 GB by editing the ~/workspace/Stepup-VMVagrant file.
 
 ```
-cd ~/workspace/Stepup-VM
-vagrant up app.stepup.example.com
+192.168.66.3 app.stepup.example.com gateway.stepup.example.com selfservice.stepup.example.com ra.stepup.example.com tiqr.stepup.example.com tiqr.stepup.example.com middleware.stepup.example.com ks.stepup.example.com keyserver.stepup.example.com db.stepup.example.com
+192.168.66.4 manage.stepup.example.com
 ```
 
 This takes a while. In the mean time:
@@ -165,7 +165,7 @@ $ vagrant up
 ```
 
 This creates two VMs:
-1. `app.stepup.example.com`. This VMs is going to host the application stack (CentOS7-Nginx-PHP-FPM-MariaDB)
+1. `app.stepup.example.com`. This VM is going to host the application stack (CentOS7-Nginx-PHP-FPM-MariaDB)
 2. `manage.stepup.example.com`. This VM is going to host the ELK stack (Elastic Search-Logstash-Kibana)
 
 Vagrant is used to create two VMs:
@@ -337,7 +337,3 @@ The database is a MariaDB Galera cluster that consists of one node and that runs
 $ vagrant ssh app.stepup.example.com
 $ sudo service mysql bootstrap
 ```
-
-
-
-For a developmet VM we will be installing Stepup components from GitHub clones on the host that are mounted in the VM.
