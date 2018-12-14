@@ -6,4 +6,5 @@ ansible-playbook deploy/site.yml -i environment/inventory -l app* -e "galera_boo
 echo ""
 echo "Next steps:"
 echo "- Deploy manage server (optional): ./deploy-site-manage.sh"
-echo "- Deploy components              : ./deploy-release.sh"
+echo "- Deploy components              : ./deploy-release.sh (or, for a development server, deploy-develop.sh)"
+
