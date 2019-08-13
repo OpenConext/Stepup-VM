@@ -20,6 +20,9 @@ These are the requirements for a minimal installation and results in a Stepup sy
 Requirements:
 - a YubiKey
 - VirtualBox / VMware Fusion or Workstation
+    - VirtualBox requirements:
+        - virtualbox-extension-pack
+        - vagrant-vbguest
 - Vagrant
 - Ansible 2.x (< 2.4)
 - bash, openssl, git
@@ -27,7 +30,7 @@ Requirements:
 
 See the [Stepup-Deploy README](https://github.com/OpenConext/Stepup-Deploy/blob/develop/README.md) for more detailed information on (installing) the requirements above.
 
-# Quickstart Stepup-VM
+# Production Stepup-VM guide 
 
 This installs a Stepup-VM for testing purposes. Installation of the stepup components is from the prebuild tarballs that are hosted on github.
 
@@ -66,7 +69,7 @@ ln -s ~/workspace/Stepup-Deploy ~/workspace/Stepup-VM/deploy
 Vagrant is used to create the app.stepup.example.com VM. Vagrant uses Ansible to provision to configure the networking in the VM and to do a yum update. This takes a while. If you have the resources, you could increase the memory from 2 to 3 or 4 GB by editing the ~/workspace/Stepup-VMVagrant file.
 
 ```
-192.168.66.3 app.stepup.example.com gateway.stepup.example.com selfservice.stepup.example.com ra.stepup.example.com tiqr.stepup.example.com tiqr.stepup.example.com middleware.stepup.example.com ks.stepup.example.com keyserver.stepup.example.com db.stepup.example.com
+192.168.66.3 app.stepup.example.com gateway.stepup.example.com selfservice.stepup.example.com ra.stepup.example.com tiqr.stepup.example.com tiqr.stepup.example.com middleware.stepup.example.com ks.stepup.example.com keyserver.stepup.example.com db.stepup.example.com ssp.stepup.example.com
 192.168.66.4 manage.stepup.example.com
 ```
 
@@ -85,7 +88,7 @@ This requires a YubiKey. This gives you a client ID and a secret key for accessi
     - Copy the secret key to environment/yubico_secret_key. E.g. `echo 'AAAAAAAAAAAAAAAAAAAAAAAAAAA=' > ./environment/yubico_secret_key`. 
 
 
-Put the ID of your YubiKey in environment/yubikey_id. E.g. `echo '12345678' > ./environment/yubikey_id`. This ID is printed on your YubiKey ans is 8 digits.
+Put the ID of your YubiKey in environment/yubikey_id. E.g. `echo '12345678' > ./environment/yubikey_id`. This ID is printed on your YubiKey ans is 8 digits. If this id is less then 8 characters prepend with 0.
 
 Set some passwords to known values:
 ```
@@ -156,7 +159,7 @@ Recommended Settings:
 Choose "Discover" to start searching / filtering. See https://www.elastic.co/guide/en/kibana/4.6/discover.html for more information.
 
 
-# How does all of this work?
+# Development Stepup-VM guide
 
 ## 1. Create two VMs using Vagrant
 
@@ -214,7 +217,7 @@ The Ansible variables that need to be set are put "environment/host_vars/app.ste
   - Copy the client ID to environment/yubico_client_id. E.g. `echo '12345' > ./environment/yubico_client_id`.
   - Copy the secret key to environment/yubico_secret_key. E.g. `echo 'AAAAAAAAAAAAAAAAAAAAAAAAAAA=' > ./environment/yubico_secret_key`. 
       
-2. Put the ID of your YubiKey in environment/yubikey_id. E.g. `echo '12345678' > ./environment/yubikey_id`. This ID is printed on your YubiKey.
+2. Put the ID of your YubiKey in environment/yubikey_id. E.g. `echo '12345678' > ./environment/yubikey_id`. This ID is printed on your YubiKey. If this id is less then 8 characters prepend with 0'.
 
 During creation of the new environment new, random, passwords and certificates are generated. Because it is convenient to have some simple known passwords there is a script that sets these passwords:
   
