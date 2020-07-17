@@ -13,6 +13,8 @@ COMPONENTS=(
 "Stepup-RA"
 "Stepup-tiqr"
 "oath-service-php"
+"stepup-demo-gssp"
+"stepup-demo-gssp-2"
 )
 
 for comp in "${COMPONENTS[@]}"; do
