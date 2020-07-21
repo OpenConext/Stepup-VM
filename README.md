@@ -237,6 +237,13 @@ This script runs the Ansible playbook "site.yml" on the app server (app.stepup.e
 Because this is a development server:
 - MariaDB galera cluster is bootsrapped and configured as one node and a script is installed to bootstrap the node after boot. 
 
+## 5. Use the test GSSP's
+
+You could add the hosts below to your `/etc/hosts` file to use the test GSSP's
+```
+192.168.66.3 demo-gssp.stepup.example.com demo-gssp-2.stepup.example.com
+```
+
 # Troubleshooting
 
 ## I'm getting an error while creating / setting up the VM's 
