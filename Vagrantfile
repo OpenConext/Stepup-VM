@@ -150,6 +150,7 @@ Vagrant.configure("2") do |config|
       "stepup-middleware:children" => ["stepup-app"],
       "stepup-tiqr:children" => ["stepup-app"],
       "stepup-keyserver:children" => ["stepup-app"],
+      "stepup-webauthn:children" => ["stepup-app"],
       # Don't use a sparate lb, use the proxy role instead.
       # It set's up a simple reverse proxy using nginx op the app server
       "lb" => [],
