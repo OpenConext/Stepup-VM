@@ -68,9 +68,16 @@ ln -s ~/workspace/Stepup-Deploy ~/workspace/Stepup-VM/deploy
 
 Vagrant is used to create the app.stepup.example.com VM. Vagrant uses Ansible to provision to configure the networking in the VM and to do a yum update. This takes a while. If you have the resources, you could increase the memory from 2 to 3 or 4 GB by editing the ~/workspace/Stepup-VMVagrant file.
 
+Add the following to your hosts-file:
+
 ```
 192.168.66.3 app.stepup.example.com gateway.stepup.example.com selfservice.stepup.example.com ra.stepup.example.com tiqr.stepup.example.com tiqr.stepup.example.com middleware.stepup.example.com ks.stepup.example.com keyserver.stepup.example.com db.stepup.example.com ssp.stepup.example.com
 192.168.66.4 manage.stepup.example.com
+```
+Start the creation of the Virtual machines by running
+```
+~/workspace/Stepup-Deploy 
+vagrant up
 ```
 
 This takes a while. In the mean time:
@@ -83,12 +90,15 @@ cd ~/workspace/Stepup-VM
 
 Get an API key for using the Yubico authentication service at https://upgrade.yubico.com/getapikey/
 This requires a YubiKey. This gives you a client ID and a secret key for accessing the Yubico authentication service. You need to authenticate with an YubiKey to get them.
-
-    - Copy the client ID to environment/yubico_client_id. E.g. `echo '12345' > ./environment/yubico_client_id`.
-    - Copy the secret key to environment/yubico_secret_key. E.g. `echo 'AAAAAAAAAAAAAAAAAAAAAAAAAAA=' > ./environment/yubico_secret_key`. 
-
-
-Put the ID of your YubiKey in environment/yubikey_id. E.g. `echo '12345678' > ./environment/yubikey_id`. This ID is printed on your YubiKey ans is 8 digits. If this id is less then 8 characters prepend with 0.
+Copy the client ID to environment/yubico_client_id and the secret key to environment/yubico_secret_key. E.g:
+```
+echo '12345' > ./environment/yubico_client_id
+echo 'AAAAAAAAAAAAAAAAAAAAAAAAAAA=' > ./environment/yubico_secret_key
+```
+Put the ID of your YubiKey in environment/yubikey_id. This ID is printed on your YubiKey ans is 8 digits. If this id is less then 8 characters prepend with 0. E.g. 
+```
+echo '12345678' > ./environment/yubikey_id
+```
 
 Set some passwords to known values:
 ```
