@@ -76,7 +76,7 @@ Add the following to your hosts-file:
 ```
 Start the creation of the Virtual machines by running
 ```
-~/workspace/Stepup-Deploy 
+~/workspace/Stepup-VM 
 vagrant up
 ```
 
