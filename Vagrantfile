@@ -97,27 +97,6 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define "manage.stepup.example.com" do |manage|
-    #app.vm.synced_folder ".", "/vagrant", disabled: true
-
-    # Let vagrant create a 192.168.66.0/24 network and add a second nic to the VM for it
-    manage.vm.network :private_network, ip: "192.168.66.4"
-
-    manage.vm.provider "vmware_fusion" do |v|
-      v.vmx["memsize"] = "2048"
-      v.vmx["numvcpus"] = "2"
-
-      # Change NIC PCI slot number to 32 (from 33) to reslolve conflict with Vagrant network auto config
-      v.vmx["ethernet0.pciSlotNumber"] = "32"
-
-      #v.gui = true
-    end
-
-    manage.vm.provider "virtualbox" do |v|
-      v.customize ["modifyvm", :id, "--memory", "2048"]
-      v.customize ["modifyvm", :id, "--cpus", "2"]
-    end
-  end
 
   # Let Vagrant generate an "inventory" file for Ansible
   # This inventory file can be used by the Ansible playbooks in Stepup-Deploy
@@ -163,7 +142,6 @@ Vagrant.configure("2") do |config|
 
     ansible.host_vars = {
           "app.stepup.example.com" => {"host_ipv4" => "192.168.66.3", "backend_ipv4" => "192.168.66.3"},
-          "manage.stepup.example.com" => {"host_ipv4" => "192.168.66.4"}
         }
     # Uncomment the line below to make Ansible more verbose. Useful for troubleshooting ssh and networking issues.
     # ansible.verbose = "vvvv"
