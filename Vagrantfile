@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
           src_path = File.dirname(__FILE__) + "/src/"
           puts("INFO: 'ENV=dev' so " + src_path + " will be mounted in the app VM as /src")
         end
-      end
+    end
 
     # Let vagrant create a 192.168.66.0/24 network and add a second nic to the VM for it
     # The VM will have two NICs:
@@ -48,7 +48,9 @@ Vagrant.configure("2") do |config|
         app.vm.synced_folder src_path, "/src"#, :mount_options => ["dmode=777","fmode=666"]
       end
 
-      v.vmx["memsize"] = "2048"
+      # Required in for composer
+      v.vmx["memsize"] = "4096"
+  
       v.vmx["numvcpus"] = "2"
       #v.gui = true
 
