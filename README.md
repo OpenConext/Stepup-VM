@@ -113,7 +113,7 @@ Deploy the stepup components in the app VM:
 
 Bootstrap the database
 ```
-bootstrap-app.sh
+./bootstrap-app.sh
 ```
 
 Now you can login to (username/password: admin/admin):
@@ -194,7 +194,7 @@ Vagrant is used to create two VMs:
 ## 2. Clone git repositories
 
 ```
-$ clone-repos.sh
+$ ./clone-repos.sh
 ```
 
 The script clones read only (i.e. https://) versions of the Stepup repositories from GitHub into the "./src" directory:
@@ -213,7 +213,7 @@ The script clones the Stepup-Deploy repo as ./deploy. This repository contains t
 ## 3. Create an "environment"
 
 ```
-$ init-env.sh
+$ ./init-env.sh
 ```
 
 This script creates an new Ansible environment. This contains all the configuration for the Stepup VMs. This "environment" will be stored in the "environment" directory and is created from a template environment in Stepup-Deploy (deploy/environments/template). 
@@ -232,14 +232,14 @@ The Ansible variables that need to be set are put "environment/host_vars/app.ste
 During creation of the new environment new, random, passwords and certificates are generated. Because it is convenient to have some simple known passwords there is a script that sets these passwords:
   
 ```  
-$ set_passwords.sh
+$ ./set_passwords.sh
 ```
 This script will also encrypt the value from the "/environment/yubico_secret_key" and write it to "environment/password/yubico_secret_key".
 
 ## 4. Deploy the app server 
 
 ```
-$ deploy-site-app.sh
+$ ./deploy-site-app.sh
 ```
 
 This script runs the Ansible playbook "site.yml" on the app server (app.stepup.example.com). This sets up everything on the server, except the Stepup applications themselves: nginx, php-fpm, logging, mail, firewall
