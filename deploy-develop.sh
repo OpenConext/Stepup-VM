@@ -15,10 +15,12 @@ COMPONENTS=(
 "stepup-demo-gssp-2"
 )
 
-rv=0
+rv=0 # Set to last ansible-playbook result
+did_some_work=0 # 1 when we tried to deploy a component, 0 otherwise
 for comp in "${COMPONENTS[@]}"; do
     comp_lower=`echo "${comp}" | tr '[:upper:]' '[:lower:]'`
     if [  -z "${COMPONENT}" -o \( "${COMPONENT}" == "${comp_lower}" \) ]; then
+        did_some_work=1 # A component matched
         if [ $rv -ne 0 ]; then
            echo "Skipping deploy of ${comp_lower} due to previous error(s). Use '$0 ${comp_lower}' to deploy this component"
            continue
@@ -46,5 +48,12 @@ for comp in "${COMPONENTS[@]}"; do
         fi
     fi
 done
+
+if [ $did_some_work -eq 0 ]; then
+    echo "No components matched. Use $0 <component name> to deploy a single component, or leave blank"
+    echo "to deploy all components. Supported components:"
+    echo ${COMPONENTS[*]}
+    echo ""
+fi
 
 exit $rv
