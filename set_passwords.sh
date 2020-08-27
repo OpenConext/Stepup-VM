@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Set default (known) passwords for:
-# - kibana (https://manage.stepup.example.com/kibana4)
 # - mariadb (mysql) root user
 # - yubico API
 
@@ -24,7 +23,6 @@ if [ ! -e "environment/yubico_secret_key" -o ! -e "environment/yubico_client_id"
 fi
 
 PASSWORDS=(
-    "manage_kibana:password"
     "mariadb_root:password"
     "yubico_secret_key:`cat environment/yubico_secret_key`"
 )
