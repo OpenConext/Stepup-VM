@@ -6,5 +6,5 @@ ansible-playbook deploy/site.yml -i environment/inventory -e "galera_bootstrap_n
 echo ""
 echo "Next steps:"
 echo "- Deploy manage server (optional): ./deploy-site-manage.sh"
-echo "- Deploy components              : ./deploy-release.sh (or, for a development server, deploy-develop.sh)"
+echo "- Deploy components              : ./deploy-release.sh (or, for a development server, ./deploy-develop.sh)"
 
