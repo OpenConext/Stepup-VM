@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Deploy all components of a release form tarballs published on github.
 # Use "--help" for help and more options
