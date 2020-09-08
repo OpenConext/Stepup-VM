@@ -13,6 +13,8 @@ COMPONENTS=(
 "oath-service-php"
 "stepup-demo-gssp"
 "stepup-demo-gssp-2"
+"Stepup-Webauthn"
+"Stepup-Azure-MFA"
 )
 
 rv=0 # Set to last ansible-playbook result
