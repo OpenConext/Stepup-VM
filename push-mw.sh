@@ -29,6 +29,6 @@ fi
 # The "ansible_user" variable is set to "stepup-deploy" to emultate authentication with that user while you're actually using the
 # ssh user provisioned by vagrant to authenticate.
 
-ansible_command="ansible-playbook ${DEPLOY_DIR}/push-mw-${WHAT}.yml -i ${ENV_DIR}/inventory -e ansible_user=stepup-deploy $@"
+ansible_command="ansible-playbook ${DEPLOY_DIR}/push-mw-${WHAT}.yml -i ${ENV_DIR}/inventory -e deploy_become_override=yes $@"
 echo $ansible_command
 $ansible_command
