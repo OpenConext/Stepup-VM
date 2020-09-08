@@ -1,12 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
 # Deploy all components of a release form tarballs published on github.
 # Use "--help" for help and more options
 
 # Default release to deploy
-RELEASE=15
+RELEASE=17
 
 # Add new releases here
+
+COMPONENTS_RELEASE_17=(
+"Stepup-Gateway-3.0.1-20200415094937Z-ba031888bdbfee9517eded9553c1bb73a20229a0.tar.bz2"
+"Stepup-SelfService-3.1.0-20200123094957Z-899924d0139418958a9e502aa52eeea34494053d.tar.bz2"
+"Stepup-RA-3.1.3-20200316151150Z-3adf37d912d2c42ffab98b4a81abdbae9d37480f.tar.bz2"
+"Stepup-tiqr-2.1.15-20191107142732Z-92072c0ec958a9725dff1658ecd0279d224c84ed.tar.bz2"
+"Stepup-Middleware-3.1.8-20200519144844Z-ab193b0c596f8ac426d3222aa87d4764e1600644.tar.bz2"
+"oath-service-php-1.0.1-20150723081351Z-56c990e62b4ba64ac755ca99093c9e8fce3e8fe9.tar.bz2"
+)
 
 COMPONENTS_RELEASE_15=(
 "Stepup-Gateway-2.9.1-20180620090223Z-19f8d51441f773bb9b21424f336f4b92b5509f46.tar.bz2" # new
