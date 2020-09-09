@@ -90,10 +90,17 @@ Vagrant.configure("2") do |config|
       # "vagrant halt" to stop the VM
 
       if src_path != nil then
-        app.vm.synced_folder "./src/", "/src"#,
-          #nfs: true,
-          #linux__nfs_options: ['rw','no_subtree_check','all_squash','no_root_squash','async']
-          #:mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
+        # Use the Vagrant default method of mounting a directory on the host in the VM
+        # This mounts the <Stepup-VM>/src directory on the host in the VM as /src
+        # If you get file IO related errors using this method, you can use NFS instead
+        # by commenting the line below and uncommenting the four lines below that
+        app.vm.synced_folder "./src/", "/src"
+
+        # Use NFS for mounting the /src directory
+        #app.vm.synced_folder "./src/", "/src",
+        #  nfs: true,
+        #  linux__nfs_options: ['rw','no_subtree_check','all_squash','no_root_squash','async'],
+        #  mount_options: ['nolock,vers=3,udp,noatime,actimeo=1']
       end
 
     end
@@ -121,8 +128,6 @@ Vagrant.configure("2") do |config|
       "app" => ["app.stepup.example.com"],
       "stepup-app" => ["app.stepup.example.com"],
       "dbcluster:children" => ["stepup-app"],
-      "manage" => ["manage.stepup.example.com"],
-      "es:children" => ["manage"],
       "proxy:children" => ["stepup-app"],
       "dbconfig:children" => ["stepup-app"],
       "stepup-gateway:children" => ["stepup-app"],
@@ -132,6 +137,7 @@ Vagrant.configure("2") do |config|
       "stepup-tiqr:children" => ["stepup-app"],
       "stepup-keyserver:children" => ["stepup-app"],
       "stepup-webauthn:children" => ["stepup-app"],
+      "stepup-azuremfa:children" => ["stepup-app"],
       "stepup-demo-gssp:children" => ["stepup-app"],
       "stepup-demo-gssp-2:children" => ["stepup-app"],
       # Don't use a sparate lb, use the proxy role instead.
