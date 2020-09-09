@@ -1,4 +1,3 @@
 # Example /etc/hosts file for using the VM
 
-192.168.66.3 app.stepup.example.com gateway.stepup.example.com selfservice.stepup.example.com ra.stepup.example.com tiqr.stepup.example.com tiqr.stepup.example.com middleware.stepup.example.com ks.stepup.example.com keyserver.stepup.example.com db.stepup.example.com
-192.168.66.4 manage.stepup.example.com
+192.168.66.3 app.stepup.example.com gateway.stepup.example.com selfservice.stepup.example.com ra.stepup.example.com tiqr.stepup.example.com tiqr.stepup.example.com middleware.stepup.example.com ks.stepup.example.com keyserver.stepup.example.com db.stepup.example.com webauthn.stepup.example.com azuremfa.stepup.example.com ssp.stepup.example.com demo-gssp.stepup.example.com demo-gssp-2.stepup.example.com
