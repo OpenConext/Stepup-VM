@@ -4,7 +4,19 @@
 # Use "--help" for help and more options
 
 # Default release to deploy
-RELEASE=17
+RELEASE=18
+
+
+COMPONENTS_RELEASE_18=(
+"Stepup-Gateway-3.0.1-20200415094937Z-ba031888bdbfee9517eded9553c1bb73a20229a0.tar.bz2"
+"Stepup-Middleware-3.1.8-20200519144844Z-ab193b0c596f8ac426d3222aa87d4764e1600644.tar.bz2"
+"Stepup-SelfService-3.1.0-20200123094957Z-899924d0139418958a9e502aa52eeea34494053d.tar.bz2"
+"Stepup-RA-3.1.3-20200316151150Z-3adf37d912d2c42ffab98b4a81abdbae9d37480f.tar.bz2"
+"Stepup-tiqr-2.1.15-20191107142732Z-92072c0ec958a9725dff1658ecd0279d224c84ed.tar.bz2"
+"oath-service-php-1.0.1-20150723081351Z-56c990e62b4ba64ac755ca99093c9e8fce3e8fe9.tar.bz2"
+"Stepup-Azure-MFA-1.2.1-20200917120714Z-918bb78d0ba6e3349f5749d0b1c6309923036d22.tar.bz2" # new
+"Stepup-Webauthn-1.0.3-20200918145732Z-5c2a706365e405a2d3b75e4af41c53e828efc07f.tar.bz2" # new
+)
 
 COMPONENTS_RELEASE_17=(
 "Stepup-Gateway-3.0.1-20200415094937Z-ba031888bdbfee9517eded9553c1bb73a20229a0.tar.bz2" # new
@@ -177,7 +189,7 @@ if [ ! -d "./tarballs" ]; then
 fi
 
 for comp in "${COMPONENTS[@]}"; do
-    pattern='^(Stepup-Gateway|Stepup-Middleware|Stepup-SelfService|Stepup-RA|Stepup-tiqr|oath-service-php)-(.*)\.tar\.bz2$'
+    pattern='^(Stepup-Gateway|Stepup-Middleware|Stepup-SelfService|Stepup-RA|Stepup-tiqr|oath-service-php|Stepup-Azure-MFA|Stepup-Webauthn)-(.*)\.tar\.bz2$'
     [[ $comp =~ $pattern ]]
     repo_name=${BASH_REMATCH[1]}
     release_name=${BASH_REMATCH[2]}
