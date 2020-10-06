@@ -1,5 +1,5 @@
 # Stepup-VM
-Stepup-VM - Vagrant VMs for use with [Stepup-Deploy](https://github.com/OpenConext/Stepup-Deploy)
+Stepup-VM – A Vagrant VM for use with [Stepup-Deploy](https://github.com/OpenConext/Stepup-Deploy)
 
 You can use the Vagrant file and scripts in this repository to create a complete Stepup system for testing or development purposes. After following the instructions in this repository you will have one virtual machine `app.stepup.example.com` with a fixed IP of 192.168.66.3. This machine hosts all the stepup applications, the database and an IdP and SP for testing. To create a true production setup follow the instructions from [Stepup-Deploy](https://github.com/OpenConext/Stepup-Deploy) instead.
 
@@ -25,11 +25,11 @@ Requirements:
 
 See the [Stepup-Deploy README](https://github.com/OpenConext/Stepup-Deploy/blob/develop/README.md) for more detailed information on (installing) the requirements above.
 
-# Testing Stepup-VM instalation guide 
+# Testing Stepup-VM installation guide 
 
-This installs a Stepup-VM for testing purposes. Installation of the stepup components is from the prebuild tarballs that are hosted on github. This installation type is recommended for testing Stepup functionality or for testing and developing the Stepup-Deploy Ansible playbook and deploy scripts.
+This installs a Stepup-VM for testing purposes a.k.a "test mode". Installation of the stepup components is from the prebuild tarballs that are hosted on github. This installation type is recommended for testing Stepup functionality or for testing and developing the Stepup-Deploy Ansible playbook and deploy scripts.
 
-If you are going to do significant development on the Stepup components themselves, installing the Stepup-VM in "development" mode is probably a better option. See the [Development Stepup-VM guide](#Development-stepup-vm-guide) section below for the installation instructions for a development setup.
+If you are going to do significant development on the Stepup components themselves, installing the Stepup-VM in "development" mode is probably a better option. See the [Development Stepup-VM guide](#Development-stepup-vm-installation-guide) section below for the installation instructions for a development setup.
 
 Ensure that you have all the tools installed:
 - Vagrant with the VirtualBox or the VMWare provider
@@ -157,7 +157,7 @@ http://app.stepup.example.com:1080
 
 # Development Stepup-VM installation guide
 
-The Stepup-VM in "develop" mode is specifically targeted to developers. The main differences with the testing installation is that the components are installed and run from source and that these sources reside on the host and are mounted into the VM. This facillitates developing using an IDE on the host. The drawback is that this is a more complex setup and that the speed and reliabillity of the mounting in the VM depends on the combination of the host OS and the hypervisor (VirtualBox or Vagrant) that is used. The Vagrant file in this repo includes alternative mouting options that may work better in your particular setup. It may require some experimentation to arrive at a working combination unfortunatly.
+The Stepup-VM in "develop mode" is specifically targeted to developers. The main differences with the testing installation is that the components are installed and run from source and that these sources reside on the host and are mounted into the VM. This facillitates developing using an IDE on the host. The drawback is that this is a more complex setup and that the speed and reliabillity of the mounting in the VM depends on the combination of the host OS and the hypervisor (VirtualBox or Vagrant) that is used. The Vagrant file in this repo includes alternative mouting options that may work better in your particular setup. It may require some experimentation to arrive at a working combination unfortunatly.
 
 ## 1. Create the development VM
 
