@@ -25,11 +25,11 @@ Requirements:
 
 See the [Stepup-Deploy README](https://github.com/OpenConext/Stepup-Deploy/blob/develop/README.md) for more detailed information on (installing) the requirements above.
 
-# Production Stepup-VM guide 
+# Testing Stepup-VM instalation guide 
 
-This installs a Stepup-VM for testing purposes. Installation of the stepup components is from the prebuild tarballs that are hosted on github.
+This installs a Stepup-VM for testing purposes. Installation of the stepup components is from the prebuild tarballs that are hosted on github. This installation type is recommended for testing Stepup functionality or for testing and developing the Stepup-Deploy Ansible playbook and deploy scripts.
 
-If you are installing the Stepup-VM in "development" mode, the (Development Stepup-VM guide)[#Development-stepup-vm-guide] section contains the installation instructions specific for a development setup.
+If you are going to do significant development on the Stepup components themselves, installing the Stepup-VM in "development" mode is probably a better option. See the [Development Stepup-VM guide](#Development-stepup-vm-guide) section below for the installation instructions for a development setup.
 
 Ensure that you have all the tools installed:
 - Vagrant with the VirtualBox or the VMWare provider
@@ -39,7 +39,7 @@ Ensure that you have all the tools installed:
 - keyczart and keytool. These can be installed using pip:
   `pip install python-keyczar`
 
-A fast (wired) connection is recommended while setting up the VM. The VM has been configured to cache downloaded rpms and composer packages in the Stepup-VM/vagrant directory, so repeated installs of the VM are faster.
+A fast (wired) internet connection is recommended while setting up the VM. The VM has been configured to cache downloaded rpms and composer packages in the Stepup-VM/vagrant directory, so repeated installs of the VM are faster.
 
 ## Setup repositories
 
@@ -155,16 +155,18 @@ Mailcatcher is installed to catch all mail send from the environment.
 http://app.stepup.example.com:1080
 
 
-# Development Stepup-VM guide
+# Development Stepup-VM installation guide
+
+The Stepup-VM in "develop" mode is specifically targeted to developers. The main differences with the testing installation is that the components are installed and run from source and that these sources reside on the host and are mounted into the VM. This facillitates developing using an IDE on the host. The drawback is that this is a more complex setup and that the speed and reliabillity of the mounting in the VM depends on the combination of the host OS and the hypervisor (VirtualBox or Vagrant) that is used. The Vagrant file in this repo includes alternative mouting options that may work better in your particular setup. It may require some experimentation to arrive at a working combination unfortunatly.
 
 ## 1. Create the development VM
 
 ```
 $ ./vagrant-up-dev-vm
 ```
-This command runs vagrant up, setting `ENV=dev`. This enables the Vagrant configuration that mounts the vagrant/src directory on the host into /src/ in the VM. This share is used to mount the Stepup component sources from the host in the app VM.
+This command runs `vagrant up`, setting `ENV=dev`. This enables the Vagrant configuration that mounts the `vagrant/src` directory on the host into `/src/` in the VM. This share is used to mount the Stepup component sources from the host in the app VM.
 
-This creates the `app.stepup.example.com` VM. This VM is going to host the application stack (CentOS7-Nginx-PHP-FPM-MariaDB)
+Vagrant creates the `app.stepup.example.com` VM. This VM is going to host the application stack (CentOS7-Nginx-PHP-FPM-MariaDB)
 
 - Vagrant writes the Ansible inventory. "environment/inventory" is a symlink to this inventory.
 - Vagrant uses Ansible to provision the VM by running the provision.yml playbook. This:
@@ -283,12 +285,18 @@ All the scrips are written such that they can be safely run again. So you can fi
 
 Note that even though a yum / composer cache are kept outside the VM you do need a network connection to (re)create a VM.
 
+(Development mode only)
+
+There has to be an exception to the above of course. After the `composer install` for a component install by `./deploy-develop.sh` is completed its configuration is updated. Once that has happend a `composer install` will fail for many components because the `composer install` will partly revert the component's configuration leading to errors in the configuration. You need to completely revert the configuration to that in the repo allow the composer install to succeed.
+
+Note that you can use `./deploy-develop.sh` to install individual components as well. Use e.g. `./deploy-develop.sh stepup-gateway`
+
 ## I'm keep getting weird errors during the composer install step
 
-If you're using the Stepup-VM in develop mode this is the first step that generates a lot of IO to the /src share that is mounted in the VM. Looks like it is not working well for your, sorry. By default the standard method provided by Vagrant is used for mounting. If the does not work try using NFS instead. To do this:
+If you're using the Stepup-VM in develop mode this is the first step that generates a lot of IO to the /src share that is mounted in the VM. If the error is not due to composer running out of memory it looks like the mounting method is not working well for your, sorry. By default the standard method provided by Vagrant is used for mounting. If the does not work try using NFS instead. To do this:
 
 1. Open the `Vagrantfile` and comment the `app.vm.synced_folder "./src/", "/src"` line and uncomment the NFS configuration below it.
-2. Reload the VM using the `./vagrant-reload-dev-vm.sh ` script
+2. Reload the VM using the `./vagrant-reload-dev-vm.sh` script
 
 ## Where are the logs?
 
@@ -297,8 +305,6 @@ The app server is configured to log all messages to syslog, you can find these i
 $ vagrant ssh
 $ sudo tail /var/log/messages
 ```
-
-The logs are also accessible in processed, searchable form in Kibana. See the section about "Kibana" above. 
 
 ## Getting the ID of a YubiKey
 
@@ -309,6 +315,19 @@ You can also get this ID by decoding the first 12 characters of an OTP generated
 E.g. If the first 12 characters of your YubikeyOutput are "ccccccbdthji" this decodes to the number "1234567". Prefixing a "0" gives a yubikey ID of "01234567". 
 
 ## Cannot connect to a VM anymore
+
+If you are using test mode:
+
+- Verify that it is running: 
+    ```
+    $ vagrant up
+    ```
+- Reload it:
+    ```
+    $ vagrant reload
+    ```
+
+If you are using the develop mode:
 
 - Verify that it is running: 
     ```
