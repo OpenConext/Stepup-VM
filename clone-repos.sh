@@ -41,6 +41,8 @@ SOURCE_REPOS=(
     "OpenConext:Stepup-RA"
     "OpenConext:Stepup-tiqr"
     "SURFnet:oath-service-php"
+    "OpenConext:Stepup-Webauthn"
+    "OpenConext:Stepup-Azure-MFA"
 )
 
 # Clone sources from github, if directory does not yet exist
@@ -64,6 +66,20 @@ if [ ! -e "./deploy" ]; then
     git clone https://github.com/OpenConext/Stepup-Deploy.git ./deploy
 else
     echo "Directory ./deploy exists. Skipping git clone into that directory."
+fi
+
+
+
+if [ ! -e "./src/stepup-demo-gssp" ]; then
+  git clone https://github.com/OpenConext/Stepup-gssp-example.git ./src/stepup-demo-gssp
+else
+  echo "Directory ./src/Stepup-gssp-example exists. Skipping git clone into that directory."
+fi
+
+if [ ! -e "./src/stepup-demo-gssp-2" ]; then
+  git clone https://github.com/OpenConext/Stepup-gssp-example.git ./src/stepup-demo-gssp-2
+else
+  echo "Directory ./src/Stepup-gssp-example-2 exists. Skipping git clone into that directory."
 fi
 
 echo "OK."
