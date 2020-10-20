@@ -112,7 +112,7 @@ The Yubikey secret is set from the ./environment/yubico_secret_key
 When Vagrant is done provisioning the VM, continue with the setup of the app VM.
 Deploy the stepup components in the app VM:
 ```
-./deploy-release
+./deploy-release.sh
 ```
 
 Bootstrap the database
