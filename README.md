@@ -108,6 +108,19 @@ The Yubikey secret is set from the ./environment/yubico_secret_key
 ./set_passwords.sh
 ```
 
+## Deploy the app server 
+
+```
+$ ./deploy-site-app.sh
+```
+
+This script runs the Ansible playbook "site.yml" on the app server (app.stepup.example.com). This sets up everything on the server, except the Stepup applications themselves: nginx, php-fpm, logging, mail, firewall
+ 
+Because this is a development server:
+- MariaDB galera cluster is bootstrapped and configured as one node and a script is installed to bootstrap the node after boot.
+
+Any additional parameters you add to `deploy-site-app.sh` are passed to Ansible. To only deploy the "app" role use E.g. `./deploy-site-app.sh -t app`
+
 ### Deploy the stepup applications into the VM
 When Vagrant is done provisioning the VM, continue with the setup of the app VM.
 Deploy the stepup components in the app VM:
