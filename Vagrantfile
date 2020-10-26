@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
           src_path = File.dirname(__FILE__) + "/src/"
           puts("INFO: 'ENV=dev' so " + src_path + " will be mounted in the app VM as /src")
         end
-      end
+    end
 
     # Let vagrant create a 192.168.66.0/24 network and add a second nic to the VM for it
     # The VM will have two NICs:
@@ -48,7 +48,9 @@ Vagrant.configure("2") do |config|
         app.vm.synced_folder src_path, "/src"#, :mount_options => ["dmode=777","fmode=666"]
       end
 
-      v.vmx["memsize"] = "2048"
+      # Required in for composer
+      v.vmx["memsize"] = "4096"
+
       v.vmx["numvcpus"] = "2"
       #v.gui = true
 
@@ -76,7 +78,7 @@ Vagrant.configure("2") do |config|
     app.vm.provider "virtualbox" do |v|
       # Use the default (vboxsf)
       v.customize ["modifyvm", :id, "--ioapic", "on"]
-      v.customize ["modifyvm", :id, "--memory", "2048"]
+      v.customize ["modifyvm", :id, "--memory", "4096"]
       v.customize ["modifyvm", :id, "--cpus", "2"]
 
       # Setup an additional shared folder for mounting the sources from the host
@@ -88,36 +90,22 @@ Vagrant.configure("2") do |config|
       # "vagrant halt" to stop the VM
 
       if src_path != nil then
-        app.vm.synced_folder "./src/", "/src",
-          nfs: true,
-          linux__nfs_options: ['rw','no_subtree_check','all_squash','no_root_squash','async']
-          #:mount_options => ['nolock,vers=3,udp,noatime,actimeo=1']
+        # Use the Vagrant default method of mounting a directory on the host in the VM
+        # This mounts the <Stepup-VM>/src directory on the host in the VM as /src
+        # If you get file IO related errors using this method, you can use NFS instead
+        # by commenting the line below and uncommenting the four lines below that
+        app.vm.synced_folder "./src/", "/src"
+
+        # Use NFS for mounting the /src directory
+        #app.vm.synced_folder "./src/", "/src",
+        #  nfs: true,
+        #  linux__nfs_options: ['rw','no_subtree_check','all_squash','no_root_squash','async'],
+        #  mount_options: ['nolock,vers=3,udp,noatime,actimeo=1']
       end
 
     end
   end
 
-  config.vm.define "manage.stepup.example.com" do |manage|
-    #app.vm.synced_folder ".", "/vagrant", disabled: true
-
-    # Let vagrant create a 192.168.66.0/24 network and add a second nic to the VM for it
-    manage.vm.network :private_network, ip: "192.168.66.4"
-
-    manage.vm.provider "vmware_fusion" do |v|
-      v.vmx["memsize"] = "2048"
-      v.vmx["numvcpus"] = "2"
-
-      # Change NIC PCI slot number to 32 (from 33) to reslolve conflict with Vagrant network auto config
-      v.vmx["ethernet0.pciSlotNumber"] = "32"
-
-      #v.gui = true
-    end
-
-    manage.vm.provider "virtualbox" do |v|
-      v.customize ["modifyvm", :id, "--memory", "2048"]
-      v.customize ["modifyvm", :id, "--cpus", "2"]
-    end
-  end
 
   # Let Vagrant generate an "inventory" file for Ansible
   # This inventory file can be used by the Ansible playbooks in Stepup-Deploy
@@ -140,8 +128,6 @@ Vagrant.configure("2") do |config|
       "app" => ["app.stepup.example.com"],
       "stepup-app" => ["app.stepup.example.com"],
       "dbcluster:children" => ["stepup-app"],
-      "manage" => ["manage.stepup.example.com"],
-      "es:children" => ["manage"],
       "proxy:children" => ["stepup-app"],
       "dbconfig:children" => ["stepup-app"],
       "stepup-gateway:children" => ["stepup-app"],
@@ -167,7 +153,6 @@ Vagrant.configure("2") do |config|
 
     ansible.host_vars = {
           "app.stepup.example.com" => {"host_ipv4" => "192.168.66.3", "backend_ipv4" => "192.168.66.3"},
-          "manage.stepup.example.com" => {"host_ipv4" => "192.168.66.4"}
         }
     # Uncomment the line below to make Ansible more verbose. Useful for troubleshooting ssh and networking issues.
     # ansible.verbose = "vvvv"

@@ -41,6 +41,8 @@ SOURCE_REPOS=(
     "OpenConext:Stepup-RA"
     "OpenConext:Stepup-tiqr"
     "SURFnet:oath-service-php"
+    "OpenConext:Stepup-Webauthn"
+    "OpenConext:Stepup-Azure-MFA"
 )
 
 # Clone sources from github, if directory does not yet exist
