@@ -28,8 +28,8 @@ for comp in "${COMPONENTS[@]}"; do
            continue
         fi
         echo "***** Deploying ${comp_lower} *****"
-        echo ansible-playbook deploy/deploy.yml -l app* -i environment/inventory -t ${comp_lower} -e tarball_location="dummy" -e component_dir_name="/src/${comp}" -e develop=true
-        ansible-playbook deploy/deploy.yml -l app* -i environment/inventory -t ${comp_lower} -e tarball_location="dummy" -e component_dir_name="/src/${comp}" -e develop=true
+        echo ansible-playbook deploy/deploy.yml -l app* -i environment/inventory -t ${comp_lower} -e tarball_location="dummy" -e component_dir_name="/src/${comp}" -e develop=true -e configonly=false
+        ansible-playbook deploy/deploy.yml -l app* -i environment/inventory -t ${comp_lower} -e tarball_location="dummy" -e component_dir_name="/src/${comp}" -e develop=true -e configonly=false
         rv=$?
         if [ $rv -ne 0 ]; then
             echo ""
