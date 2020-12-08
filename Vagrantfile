@@ -140,8 +140,9 @@ Vagrant.configure("2") do |config|
       "stepup-azuremfa:children" => ["stepup-app"],
       "stepup-demo-gssp:children" => ["stepup-app"],
       "stepup-demo-gssp-2:children" => ["stepup-app"],
+
       # Don't use a separate lb, use the proxy role instead.
-      # It set's up a simple reverse proxy using nginx op the app server
+      # It sets up a simple reverse proxy using nginx op the app server
       "lb" => [],
       "ks" => [],
       "ks:children" => ["app"],
