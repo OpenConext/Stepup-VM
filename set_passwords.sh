@@ -22,6 +22,12 @@ if [ ! -e "environment/yubico_secret_key" -o ! -e "environment/yubico_client_id"
     exit 1
 fi
 
+
+# Read environment config to detect Ansible Vault vs Keyczar
+echo "Reading configuration from: environment/environment.conf"
+. "environment/environment.conf"
+echo "Done reading configuration"
+
 PASSWORDS=(
     "mariadb_root:password"
     "yubico_secret_key:`cat environment/yubico_secret_key`"
@@ -34,14 +40,20 @@ for password in "${PASSWORDS[@]}"; do
 
     echo "Setting password: ${password_file}"
 
-    tempfile=`mktemp -t set_kb_pwd.XXXXX`
-    echo -n ${password_value} > "$tempfile"
-    crypt=`./deploy/scripts/encrypt-file.sh ./environment/stepup-ansible-keystore/ -f "$tempfile"`
-    if [ $? -ne "0" ]; then
-        echo "Encryption failed"
+    if [ "${USE_KEYSZAR}" -eq 1 ]; then
+        tempfile=`mktemp -t set_kb_pwd.XXXXX`
+        echo -n ${password_value} > "$tempfile"
+        crypt=`./deploy/scripts/encrypt-file.sh ./environment/stepup-ansible-keystore/ -f "$tempfile"`
+        if [ $? -ne "0" ]; then
+            echo "Encryption failed"
+            rm "$tempfile"
+            exit 1
+        fi
         rm "$tempfile"
-        exit 1
+        echo "${crypt}" > ./environment/password/${password_file}
+    else
+        # For Ansible vault we can simply write the plaintext password. Ansible vault will only try to decrpyt if
+        # the file contains the magic $ANSIBLE_VAULT marker
+        echo "${password_value}" > ./environment/password/${password_file}
     fi
-    rm "$tempfile"
-    echo "${crypt}" > ./environment/password/${password_file}
 done
