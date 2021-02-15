@@ -137,7 +137,8 @@ Vagrant.configure("2") do |config|
       "stepup-tiqr:children" => ["stepup-app"],
       "stepup-keyserver:children" => ["stepup-app"],
       "stepup-webauthn:children" => ["stepup-app"],
-      "stepup-azuremfa:children" => ["stepup-app"],
+      "stepup-azuremfa:children" => [],
+      "stepup-readid:children" => ["stepup-app"],
       "stepup-demo-gssp:children" => ["stepup-app"],
       "stepup-demo-gssp-2:children" => ["stepup-app"],
 
