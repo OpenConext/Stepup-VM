@@ -94,13 +94,13 @@ Vagrant.configure("2") do |config|
         # This mounts the <Stepup-VM>/src directory on the host in the VM as /src
         # If you get file IO related errors using this method, you can use NFS instead
         # by commenting the line below and uncommenting the four lines below that
-        app.vm.synced_folder "./src/", "/src"
+        #app.vm.synced_folder "./src/", "/src"
 
         # Use NFS for mounting the /src directory
-        #app.vm.synced_folder "./src/", "/src",
-        #  nfs: true,
-        #  linux__nfs_options: ['rw','no_subtree_check','all_squash','no_root_squash','async'],
-        #  mount_options: ['nolock,vers=3,udp,noatime,actimeo=1']
+        app.vm.synced_folder "./src/", "/src",
+          nfs: true,
+          linux__nfs_options: ['rw','no_subtree_check','all_squash','no_root_squash','async'],
+          mount_options: ['nolock,vers=3,udp,noatime,actimeo=1']
       end
 
     end
