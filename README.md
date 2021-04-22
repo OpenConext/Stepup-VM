@@ -175,7 +175,7 @@ The Stepup-VM in "develop mode" is specifically targeted to developers. The main
 ## 1. Create the development VM
 
 ```
-$ ./vagrant-up-dev-vm
+$ ./vagrant-up-dev-vm.sh
 ```
 This command runs `vagrant up`, setting `ENV=dev`. This enables the Vagrant configuration that mounts the `vagrant/src` directory on the host into `/src/` in the VM. This share is used to mount the Stepup component sources from the host in the app VM.
 
