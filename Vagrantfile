@@ -97,12 +97,16 @@ Vagrant.configure("2") do |config|
         #app.vm.synced_folder "./src/", "/src"
 
         # Use NFS for mounting the /src directory
-        app.vm.synced_folder "./src/", "/src",
-          nfs: true,
-          linux__nfs_options: ['rw','no_subtree_check','all_squash','no_root_squash','async'],
-          mount_options: ['nolock,vers=3,udp,noatime,actimeo=1']
-      end
-
+        #app.vm.synced_folder "./src/", "/src",
+        #  nfs: true,
+        #  linux__nfs_options: ['rw','no_subtree_check','all_squash','no_root_squash','async'],
+        #  mount_options: ['nolock,vers=3,udp,noatime,actimeo=1']
+        # Use NFS4 over tcp for mounting the /src directory (Needed on Ubuntu20+)
+        config.vm.synced_folder "./src", "/src",
+          type: "nfs",
+          nfs_version: 4,
+          nfs_udp: false
+        end
     end
   end
 
