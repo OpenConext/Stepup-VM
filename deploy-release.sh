@@ -136,6 +136,7 @@ COMPONENTS_RELEASE_7=(
 )
 
 SINGLE_COMPONENT=""
+vm_type=""
 
 while [[ $# > 0 ]]
 do
@@ -143,7 +144,7 @@ option="$1"
 shift
     case $option in
         -h|--help)
-        echo "Usage: $0 [--release <release number>] [--component <component name>]"
+        echo "Usage: $0 --docker|--vagrant [--release <release number>] [--component <component name>]"
         echo "Deploys all the components of the specified release. Components are downloaded from github when required."
         echo "By default all components from 'Release ${RELEASE}' are deployed."
         echo ""
@@ -151,6 +152,12 @@ shift
         echo "--component <name> : Deploy only the specifed component"
         echo ""
         exit 0
+        ;;
+        -d|--docker)
+        vm_type="docker"
+        ;;
+        -v|--varant)
+        vm_type="vagrant"
         ;;
         -r|--release)
         RELEASE="$1"
@@ -172,6 +179,12 @@ shift
         ;;
     esac
 done
+
+if [ -z "$vm_type" ]; then
+    echo "Usage: $0 --docker|--vagrant [--release <release number>] [--component <component name>]"
+    echo "Error: Please specify --docker or --vagrant"
+    exit 1
+fi
 
 #COMPONENTS=( "${COMPONENTS_RELEASE_7[@]}" )
 
@@ -212,8 +225,17 @@ for comp in "${COMPONENTS[@]}"; do
         fi
     fi
     echo "Deploying './tarballs/${comp}'"
-    ./deploy/scripts/deploy.sh ./tarballs/${comp} -i ./environment/inventory -l 'app*'
-    if [ $? -ne 0 ]; then
+    if [ "$vm_type" == "docker" ]; then
+        echo docker exec -it stepupvm bash -c "/deploy/scripts/deploy.sh /tarballs/${comp} -i /environment/inventory.docker --vault-password-file /environment/stepup-ansible-vault-password "$@" -l 'app*'"
+        docker exec -it stepupvm bash -c "/deploy/scripts/deploy.sh /tarballs/${comp} -i /environment/inventory.docker --vault-password-file /environment/stepup-ansible-vault-password "$@" -l 'app*'"
+        res=$?
+    fi
+    if [ "$vm_type" == "vagrant" ]; then
+        echo ./deploy/scripts/deploy.sh ./tarballs/${comp} -i ./environment/inventory -l 'app*'
+        ./deploy/scripts/deploy.sh ./tarballs/${comp} -i ./environment/inventory -l 'app*'
+        res=$?
+    fi
+    if [ $res -ne 0 ]; then
         echo "Deploy failed"
         exit 1
     fi
@@ -222,5 +244,5 @@ done
 echo ""
 echo "==========================================================="
 echo "To run the bootstrap scripts on the application server use:"
-echo "./bootstrap-app.sh"
+echo "./bootstrap-app.sh --$vm_type"
 echo "==========================================================="

@@ -1,7 +1,9 @@
 # Stepup-VM
-Stepup-VM – A Vagrant VM for use with [Stepup-Deploy](https://github.com/OpenConext/Stepup-Deploy)
+Stepup-VM – A Vagrant VM (or docker container) for use with [Stepup-Deploy](https://github.com/OpenConext/Stepup-Deploy)
 
 You can use the Vagrant file and scripts in this repository to create a complete Stepup system for testing or development purposes. After following the instructions in this repository you will have one virtual machine `app.stepup.example.com` with a fixed IP of 192.168.66.3. This machine hosts all the stepup applications, the database and an IdP and SP for testing. To create a true production setup follow the instructions from [Stepup-Deploy](https://github.com/OpenConext/Stepup-Deploy) instead.
+
+Because Vargant is getting more and more problematic. Support (Mis)Using Docker as a VM was added.
 
 Two different setups are supported:
 
@@ -14,14 +16,19 @@ These are the requirements for a minimal installation and results in a Stepup sy
 
 Requirements:
 - a YubiKey
-- VirtualBox / VMware Fusion or Workstation
-    - VirtualBox requirements:
-        - virtualbox-extension-pack
-        - vagrant-vbguest
-- Vagrant
-- Ansible version 2.8
-- bash, openssl, git
-- keyczart and keytool
+-  bash, openssl, git
+- 
+- For creating a VM using Vagrant:
+  - VirtualBox / VMware Fusion or Workstation
+      - VirtualBox requirements:
+          - virtualbox-extension-pack
+          - vagrant-vbguest
+  - Vagrant
+  - Ansible version 2.8
+  
+- For creating a "vm" using Docker:
+  - Docker
+  - A kernel with support for cgroup v1
 
 See the [Stepup-Deploy README](https://github.com/OpenConext/Stepup-Deploy/blob/develop/README.md) for more detailed information on (installing) the requirements above.
 
@@ -32,12 +39,11 @@ This installs a Stepup-VM for testing purposes a.k.a "test mode". Installation o
 If you are going to do significant development on the Stepup components themselves, installing the Stepup-VM in "development" mode is probably a better option. See the [Development Stepup-VM guide](#Development-stepup-vm-installation-guide) section below for the installation instructions for a development setup.
 
 Ensure that you have all the tools installed:
-- Vagrant with the VirtualBox or the VMWare provider
+- Vagrant
+  - Vagrant with the VirtualBox or the VMWare provider
+  - Ansible can be installed using pip using pip. Because newer or much older Ansible versions may have incompatibilities it is recommended you stick to a known working Ansible release. To limit the Ansible version to E.g. version 2.8 :
+      `pip install "ansible<2.9"`
 - git, openssl, bash
-- Ansible can be installed using pip using pip. Because newer or much older Ansible versions may have incompatibilities it is recommended you stick to a known working Ansible release. To limit the Ansible version to E.g. version 2.8 :
-  `pip install "ansible<2.9"`
-- keyczart and keytool. These can be installed using pip:
-  `pip install python-keyczar`
 
 A fast (wired) internet connection is recommended while setting up the VM. The VM has been configured to cache downloaded rpms and composer packages in the Stepup-VM/vagrant directory, so repeated installs of the VM are faster.
 
@@ -61,7 +67,9 @@ git clone -b master https://github.com/OpenConext/Stepup-Deploy
 ln -s ~/workspace/Stepup-Deploy ~/workspace/Stepup-VM/deploy
 ```
 
-## Create app.stepup.example.com VM
+## Vagrant: Create app.stepup.example.com VM
+
+Read the next section when using Docker
 
 Vagrant is used to create the app.stepup.example.com VM. Vagrant uses Ansible to provision the VM and to configure the networking in the VM and to do a yum update. This takes a while. The VM is configured with 4 GB of memory if you are not using the VM in development mode you should be able to get away with 2GB. You can change the amount by editing the ~/workspace/Stepup-VM/Vagrant file.
 
@@ -80,6 +88,22 @@ vagrant up
 This will create and configure the VM. An Ansible provisioning step is configured in Vagrant that creates an Ansible inventory and runs the provision.yml playbook in the VM. You can repeat the provision using `vagrant provision`.
 
 All this takes a while. In the mean time you can continue with the next few steps as these do not require VM.
+
+
+## Docker: Create dockervm container
+
+Run the `docker-up.sh` script. This uses the included Dockerfile to create a Docker image "stepupvm:latest" based on the "centos:7" image, and then creates a docker container "stepupvm".
+
+The script binds the priviledged port 80 and 443 to 127.0.0.1
+
+docker-bash.sh can be used to get a bash shell in the container.
+docker-rm.sh removes the container and the image.
+
+Update your /etc/hosts to with:
+
+```
+127.0.0.1 app.stepup.example.com gateway.stepup.example.com selfservice.stepup.example.com ra.stepup.example.com tiqr.stepup.example.com tiqr.stepup.example.com middleware.stepup.example.com ks.stepup.example.com keyserver.stepup.example.com db.stepup.example.com ssp.stepup.example.com demo-gssp.stepup.example.com demo-gssp-2.stepup.example.com
+```
 
 ### Initialise the Ansible environment
 Initialise the Ansible environment:
@@ -110,8 +134,15 @@ The Yubikey secret is set from the ./environment/yubico_secret_key
 
 ## Deploy the app server 
 
+Using Vagrant:
 ```
-$ ./deploy-site-app.sh
+$ ./deploy-site-app.sh --vagant
+```
+
+Using Docker:
+
+```
+$ ./deploy-site-app.sh --docker
 ```
 
 This script runs the Ansible playbook "site.yml" on the app server (app.stepup.example.com). This sets up everything on the server, except the Stepup applications themselves: nginx, php-fpm, logging, mail, firewall
@@ -121,17 +152,36 @@ Because this is a development server:
 
 Any additional parameters you add to `deploy-site-app.sh` are passed to Ansible. To only deploy the "app" role use E.g. `./deploy-site-app.sh -t app`
 
+When using Docker, Ansible is run in the Docker container. When using Vagrant, Ansible is run on the host.
+
 ### Deploy the stepup applications into the VM
 When Vagrant is done provisioning the VM, continue with the setup of the app VM.
-Deploy the stepup components in the app VM:
+Deploy the stepup components in the app VM from prebuild tarballs on github.:
+
+Vagrant:
+
 ```
-./deploy-release.sh
+$ ./deploy-release.sh --vagrant
 ```
 
-Bootstrap the database
+Docker:
+
+```bash
+$ ./deploy-release.sh --docker
+```
+
+See the deploy-release.sh command for more details, it is possible to specify specific components to deploy, and to deploy a specific release.
+
+
+### Bootstrap the database
+
+Vagrant:
 ```
 ./bootstrap-app.sh
 ```
+
+Docker: Not yet implemented, open an shell in the container and run the bootstrap scripts manually. They are located in the /root directory.
+
 
 Now you can login to the selfservice and RA interfaces (username/password: admin/admin):
 https://selfservice.stepup.example.com
@@ -173,6 +223,8 @@ http://app.stepup.example.com:1080
 The Stepup-VM in "develop mode" is specifically targeted to developers. The main differences with the testing installation is that the components are installed and run from source and that these sources reside on the host and are mounted into the VM. This facillitates developing using an IDE on the host. The drawback is that this is a more complex setup and that the speed and reliabillity of the mounting in the VM depends on the combination of the host OS and the hypervisor (VirtualBox or Vagrant) that is used. The Vagrant file in this repo includes alternative mouting options that may work better in your particular setup. It may require some experimentation to arrive at a working combination unfortunatly.
 
 ## 1. Create the development VM
+
+Note: not (yet) updated to work with Docker
 
 ```
 $ ./vagrant-up-dev-vm
@@ -252,9 +304,18 @@ This script sets the mariadb root password to "password". Additionally this scri
 
 ## 4. Deploy the app server 
 
+Vagrant:
+
 ```
-$ ./deploy-site-app.sh
+$ ./deploy-site-app.sh --vagrant
 ```
+
+Docker:
+
+```
+$ ./deploy-site-app.sh --docker
+```
+
 
 This script runs the Ansible playbook "site.yml" on the app server (app.stepup.example.com). This sets up everything on the server, except the Stepup applications themselves: nginx, php-fpm, logging, mail, firewall
  
