@@ -210,6 +210,12 @@ for comp in "${COMPONENTS[@]}"; do
         continue
     fi
 
+    # a $release_name looks like this:
+    #5.0.5-20221128154850Z-d03c0738b61a482de6e2d67ed2e98a098c35aa1d
+    # Cut the last 57 characters from the release name to get the version number tag in release_tag
+    # The github action uses only the versiontag, wheras the old Stepup-Build upload 
+    # release script uses the release name. So we try both when downloading
+    release_tag=$(echo "${release_name}" | rev | cut -c 58- | rev)
     if [ ! -f "./tarballs/$comp" ]; then
         echo "File './tarballs/${comp}' not found"
         if [ "${repo_name}" == "oath-service-php" ]; then
@@ -218,10 +224,23 @@ for comp in "${COMPONENTS[@]}"; do
             download_url=https://github.com/OpenConext/${repo_name}/releases/download/${release_name}/${comp}
         fi
         echo "Downloading ${download_url}"
-        curl -L -o "./tarballs/${comp}" "${download_url}"
+        # -L: follow redirects
+        # -f: fail on http errors
+        # -o: output file
+        curl -L -f -o "./tarballs/${comp}" "${download_url}"
         if [ $? -ne 0 ]; then
-            echo "Download failed"
-            exit 1
+            echo "Download failed, trying alternative name"
+            if [ "${repo_name}" == "oath-service-php" ]; then
+                download_url=https://github.com/SURFnet/${repo_name}/releases/download/${release_tag}/${comp}
+            else
+                download_url=https://github.com/OpenConext/${repo_name}/releases/download/${release_tag}/${comp}
+            fi
+            echo "Downloading ${download_url}"
+            curl -L -f -o "./tarballs/${comp}" "${download_url}"
+            if [ $? -ne 0 ]; then
+                echo "Download failed"
+                exit 1
+            fi
         fi
     fi
     echo "Deploying './tarballs/${comp}'"
