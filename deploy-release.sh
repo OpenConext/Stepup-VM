@@ -4,7 +4,47 @@
 # Use "--help" for help and more options
 
 # Default release to deploy
-RELEASE=18
+RELEASE=SAT
+
+# Self asserted tokens (SAT) release (WIP)
+COMPONENTS_RELEASE_SAT=(
+"Stepup-Gateway-4.0.3-20230412072113Z-4949594444180dea2d422135dd19f30dfbd0abde.tar.bz2" # new
+"Stepup-Middleware-5.0.10-20230418061843Z-5eb3493bc16649c2ce48d54f6d13f63ff494f1ac.tar.bz2" # new
+"Stepup-SelfService-4.0.6-20230504122946Z-3b305daf1794c5cd43ce9dd778eeef4925d16da2.tar.bz2" # new
+"Stepup-RA-5.0.5-20230424114754Z-ec1e65741d44681d5aa7f59b12c62254e38d686a.tar.bz2" # new
+"Stepup-tiqr-3.4.5-20221020125913Z-c79fd6ef0cbfb1c08d1b3d2ab01ad58e2638ec9f.tar.bz2"
+#"oath-service-php-1.0.1-20150723081351Z-56c990e62b4ba64ac755ca99093c9e8fce3e8fe9.tar.bz2"
+"Stepup-Azure-MFA-1.4.5-20220208160607Z-913f30b3ab1378989e24e6d1ca1e98c6ca758662.tar.bz2"
+"Stepup-Webauthn-1.0.14-20220210102123Z-2c50cd1b2329eb366251e9c01dde89126b1a93b6.tar.bz2"
+)
+
+COMPONENTS_RELEASE_31=(
+"Stepup-Gateway-4.0.2-20230214110111Z-004197ab8cf44bdb6be19ff13b8a88e7c73ac2c3.tar.bz2" # new
+"Stepup-Middleware-4.5.2-20221115134340Z-17990a991d535801fe6a72a3fb7835706a8af65f.tar.bz2" # new
+"Stepup-SelfService-3.5.5-20220510084411Z-a96ef9246fb9b4d84e56c5174fb9ea271198a0d3.tar.bz2" # new
+"Stepup-RA-4.3.6-20220323084943Z-5d8e7f18295dd0444a9c1a6ffca752d20c10b597.tar.bz2" # new
+"Stepup-tiqr-3.4.5-20221020125913Z-c79fd6ef0cbfb1c08d1b3d2ab01ad58e2638ec9f.tar.bz2" # new
+"oath-service-php-1.0.1-20150723081351Z-56c990e62b4ba64ac755ca99093c9e8fce3e8fe9.tar.bz2"
+"Stepup-Azure-MFA-1.4.5-20220208160607Z-913f30b3ab1378989e24e6d1ca1e98c6ca758662.tar.bz2"
+"Stepup-Webauthn-1.0.14-20220210102123Z-2c50cd1b2329eb366251e9c01dde89126b1a93b6.tar.bz2"
+)
+
+#30
+#"Stepup-tiqr-3.4.4-20220906113758Z-d58522458ec85ca6d48c6cf5c7544403973f8af7.tar.bz2" # new
+
+#29
+#"Stepup-Gateway-3.4.7-20220608062136Z-566a2ce23d53095c93f30c16d53157bfa917ee90.tar.bz2" # new
+
+#28
+#"Stepup-Middleware-4.5.2-20221115134340Z-17990a991d535801fe6a72a3fb7835706a8af65f.tar.bz2"  # new
+#"Stepup-Middleware-4.5.0-20220407092853Z-20e0f0224d3334b0b972a5d07becbb63198c6a15.tar.bz2" # new
+#"Stepup-Azure-MFA-1.4.5-20220208160607Z-913f30b3ab1378989e24e6d1ca1e98c6ca758662.tar.bz2" # new
+#"Stepup-Gateway-3.4.6-20220420130232Z-84df54f5b256f60821147bad9b866840c705be2e.tar.bz2" # new
+#"Stepup-tiqr-3.1.4-20220419143033Z-fef3e683ae774d5540cd7806ce0719bc649b657e.tar.bz2" # new
+
+#27
+#"Stepup-Gateway-3.4.5-20220223103329Z-396bc893b85fbeb345fa62a6183c5e20530516bc.tar.bz2" # new
+#"Stepup-Middleware-4.4.1-20220208153826Z-f59282c21834eb8eef153cf3b04b3c7a5e353ec5.tar.bz2" # new
 
 
 COMPONENTS_RELEASE_18=(
