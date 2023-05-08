@@ -288,6 +288,8 @@ for comp in "${COMPONENTS[@]}"; do
     fi
     echo "Deploying '${SCRIPT_DIR}/tarballs/${comp}'"
     if [ "$vm_type" == "docker" ]; then
+        # Sync and sleep, otherwise docker might not see the file
+        sync && sleep 1
         echo docker exec -it stepupvm bash -c "/deploy/scripts/deploy.sh /tarballs/${comp} -i /environment/inventory.docker --vault-password-file /environment/stepup-ansible-vault-password "$@" -l 'app*'"
         docker exec -it stepupvm bash -c "/deploy/scripts/deploy.sh /tarballs/${comp} -i /environment/inventory.docker --vault-password-file /environment/stepup-ansible-vault-password "$@" -l 'app*'"
         res=$?
