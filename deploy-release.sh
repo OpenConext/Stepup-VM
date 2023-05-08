@@ -178,6 +178,9 @@ COMPONENTS_RELEASE_7=(
 SINGLE_COMPONENT=""
 vm_type=""
 
+# Get script directory
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 while [[ $# > 0 ]]
 do
 option="$1"
@@ -256,18 +259,18 @@ for comp in "${COMPONENTS[@]}"; do
     # The github action uses only the versiontag, wheras the old Stepup-Build upload 
     # release script uses the release name. So we try both when downloading
     release_tag=$(echo "${release_name}" | rev | cut -c 58- | rev)
-    if [ ! -f "./tarballs/$comp" ]; then
-        echo "File './tarballs/${comp}' not found"
+    if [ ! -e "${SCRIPT_DIR}/tarballs/$comp" ]; then
+        echo "File '${SCRIPT_DIR}/tarballs/${comp}' not found"
         if [ "${repo_name}" == "oath-service-php" ]; then
             download_url=https://github.com/SURFnet/${repo_name}/releases/download/${release_name}/${comp}
         else
             download_url=https://github.com/OpenConext/${repo_name}/releases/download/${release_name}/${comp}
         fi
-        echo "Downloading ${download_url}"
+        echo "Downloading ${download_url}" to "${SCRIPT_DIR}/tarballs/${comp}"
         # -L: follow redirects
         # -f: fail on http errors
         # -o: output file
-        curl -L -f -o "./tarballs/${comp}" "${download_url}"
+        curl -L -f -o "${SCRIPT_DIR}/tarballs/${comp}" "${download_url}"
         if [ $? -ne 0 ]; then
             echo "Download failed, trying alternative name"
             if [ "${repo_name}" == "oath-service-php" ]; then
@@ -275,23 +278,23 @@ for comp in "${COMPONENTS[@]}"; do
             else
                 download_url=https://github.com/OpenConext/${repo_name}/releases/download/${release_tag}/${comp}
             fi
-            echo "Downloading ${download_url}"
-            curl -L -f -o "./tarballs/${comp}" "${download_url}"
+            echo "Downloading ${download_url}" to "${SCRIPT_DIR}/tarballs/${comp}"
+            curl -L -f -o "${SCRIPT_DIR}/tarballs/${comp}" "${download_url}"
             if [ $? -ne 0 ]; then
                 echo "Download failed"
                 exit 1
             fi
         fi
     fi
-    echo "Deploying './tarballs/${comp}'"
+    echo "Deploying '${SCRIPT_DIR}/tarballs/${comp}'"
     if [ "$vm_type" == "docker" ]; then
         echo docker exec -it stepupvm bash -c "/deploy/scripts/deploy.sh /tarballs/${comp} -i /environment/inventory.docker --vault-password-file /environment/stepup-ansible-vault-password "$@" -l 'app*'"
         docker exec -it stepupvm bash -c "/deploy/scripts/deploy.sh /tarballs/${comp} -i /environment/inventory.docker --vault-password-file /environment/stepup-ansible-vault-password "$@" -l 'app*'"
         res=$?
     fi
     if [ "$vm_type" == "vagrant" ]; then
-        echo ./deploy/scripts/deploy.sh ./tarballs/${comp} -i ./environment/inventory -l 'app*'
-        ./deploy/scripts/deploy.sh ./tarballs/${comp} -i ./environment/inventory -l 'app*'
+        echo ./deploy/scripts/deploy.sh ${SCRIPT_DIR}/tarballs/${comp} -i ${SCRIPT_DIR}/environment/inventory -l 'app*'
+        ./deploy/scripts/deploy.sh ${SCRIPT_DIR}/tarballs/${comp} -i ${SCRIPT_DIR}/environment/inventory -l 'app*'
         res=$?
     fi
     if [ $res -ne 0 ]; then
