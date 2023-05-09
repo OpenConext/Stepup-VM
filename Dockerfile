@@ -33,7 +33,7 @@ RUN yum install -y net-tools
 RUN yum -y install iproute
 
 # Install initscripts for /sbin/service command
-RUN yum -y install initscripts
+RUN yum -y install initscripts redhat-lsb-core
 
 # Tools required by Stepup deploy scripts
 RUN yum -y install bzip2
