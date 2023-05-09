@@ -38,6 +38,9 @@ RUN yum -y install initscripts redhat-lsb-core
 # Tools required by Stepup deploy scripts
 RUN yum -y install bzip2
 
+# Misc handy tools
+RUN yum -y install less
+
 # Set keepcache=1 in /etc/yum.conf
 RUN sed -i 's/keepcache=0/keepcache=1/g' /etc/yum.conf
 # Exclude kernel packages from update in /etc/yum.conf
