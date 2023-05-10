@@ -5,9 +5,13 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # check if first parameter is docker or vagrant
 if [ "$1" != "--docker" ] && [ "$1" != "--vagrant" ]; then
+	echo "Use Stepup-Deploy to deply the component from source in \"develop\"."
+	echo "This install the dev dependencies and allows you to run the component"
+	echo "using the Symfony dev environment"
+	echo
 	echo "Usage: $0 --docker|--vagrant [component]"
-    echo
-    echo "If the component parameter is omitted all components are deployed."
+  echo
+  echo "If the component parameter is omitted all components are deployed."
 	exit 1
 fi
 # strip the leading "--"" from the first parameter in a variable and put it in vm_type
@@ -55,6 +59,7 @@ for comp in "${COMPONENTS[@]}"; do
         
         if [ $rv -ne 0 ]; then
             echo ""
+            echo "--------------------------------------------------------------------------------------------------------"
             echo "Installation of ${comp_lower} failed"
             echo ""
             echo "Troubleshooting tips:"
@@ -80,7 +85,23 @@ for comp in "${COMPONENTS[@]}"; do
             echo "  - vagrant ssh"
             echo "  - cd /vagrant/src/<component>"
             echo "  - ..."
+            echo "--------------------------------------------------------------------------------------------------------"
             echo ""
+        else
+            echo ""
+            echo "--------------------------------------------------------------------------------------"
+            echo "Installation of ${comp_lower} succeeded"
+            echo
+            echo "By default nginx is configured to run the component using the Symfony prod environment"
+            echo "To run the component using the dev environment, update the nginx configuration of the"
+            echo "component in /etc/nginx/conf.d/<component>.stepup.example.com.conf"
+            echo "and set the app_env variable to \"dev\". E.g.:"
+            echo "    set $app_env \"dev\";"
+            echo
+            echo "Then reload nginx to apply the configuration:"
+            echo "    systemctl reload nginx"
+            echo "--------------------------------------------------------------------------------------"
+            echo
         fi
     fi
 done
