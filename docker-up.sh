@@ -57,6 +57,7 @@ docker run -d --name stepupvm \
            --hostname="app.stepup.example.com" \
            --add-host="middleware.stepup.example.com:127.0.0.1" \
            --add-host="keyserver.stepup.example.com:127.0.0.1" \
+           --add-host="db.stepup.example.com:127.0.0.1" \
            --tmpfs /tmp \
            --tmpfs /run \
            -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
