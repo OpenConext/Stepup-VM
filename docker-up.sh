@@ -108,6 +108,12 @@ docker run -d --name stepupvm \
            --add-host="middleware.stepup.example.com:127.0.0.1" \
            --add-host="keyserver.stepup.example.com:127.0.0.1" \
            --add-host="db.stepup.example.com:127.0.0.1" \
+           --add-host="selfservice.stepup.example.com:127.0.0.1" \
+           --add-host="gateway.stepup.example.com:127.0.0.1" \
+           --add-host="ra.stepup.example.com:127.0.0.1" \
+           --add-host="ssp.stepup.example.com:127.0.0.1" \
+           --add-host="demo_gssp.stepup.example.com:127.0.0.1" \
+           --add-host="demo_gssp2.stepup.example.com:127.0.0.1" \
            --tmpfs /tmp \
            --tmpfs /run \
            -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
