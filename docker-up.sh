@@ -53,6 +53,12 @@ if [[ "$(docker ps -q -f name=stepupvm 2> /dev/null)" != "" ]]; then
   exit 0  
 fi
 
+# Check whether docker container named stepupvm exisis
+if [[ "$(docker ps -aq -f name=stepupvm 2> /dev/null)" != "" ]]; then
+  echo "Docker container stepupvm exists but is not running. Starting it."
+  docker start stepupvm
+  exit 0  
+fi
 
 # Check whether docker is using cgroup v1
 # If not, exit with error
