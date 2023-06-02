@@ -10,7 +10,7 @@ RELEASE=SAT
 COMPONENTS_RELEASE_SAT=(
 "Stepup-Gateway-4.0.3-20230412072113Z-4949594444180dea2d422135dd19f30dfbd0abde.tar.bz2" # new
 "Stepup-Middleware-5.0.10-20230418061843Z-5eb3493bc16649c2ce48d54f6d13f63ff494f1ac.tar.bz2" # new
-"Stepup-SelfService-4.0.6-20230504122946Z-3b305daf1794c5cd43ce9dd778eeef4925d16da2.tar.bz2" # new
+"Stepup-SelfService-4.0.8-20230602111254Z-5381fba8f5127551813c6eb30da0ab72509786f7.tar.bz2" # new
 "Stepup-RA-5.0.5-20230424114754Z-ec1e65741d44681d5aa7f59b12c62254e38d686a.tar.bz2" # new
 "Stepup-tiqr-3.4.5-20221020125913Z-c79fd6ef0cbfb1c08d1b3d2ab01ad58e2638ec9f.tar.bz2"
 #"oath-service-php-1.0.1-20150723081351Z-56c990e62b4ba64ac755ca99093c9e8fce3e8fe9.tar.bz2"
